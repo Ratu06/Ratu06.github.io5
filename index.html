@@ -437,12 +437,7 @@ void main() {
 }</code></pre>
     <button class="btn-run" onclick="capture('1.png')">Capture</button>
   </div>
- <script>
-function capture(namaFile) {
-  console.log("File yang dipilih:", namaFile);
-}
-</script>
-  
+ 
   <div class="card">
     <h2>Slide 8 & 9 Base class</h2>
     <p><strong>Fitur:</strong>
@@ -836,6 +831,24 @@ void main() {
     modalTitle.innerText = programTitle;
     modal.style.display = 'flex';
   }
+
+  function capture(namaFile) {
+  modal.style.display = 'flex';
+  modalTitle.innerText = "Hasil Output";
+  modalIframe.src = ""; // kosongkan iframe
+
+  modalIframe.style.display = "none";
+
+  let img = document.createElement("img");
+  img.src = namaFile;
+  img.style.width = "100%";
+  img.style.height = "100%";
+  img.style.objectFit = "contain";
+
+  const body = document.querySelector(".modal-body");
+  body.innerHTML = "";
+  body.appendChild(img);
+}
 
   document.querySelectorAll('.btn-run').forEach(btn => {
     btn.addEventListener('click', () => {
