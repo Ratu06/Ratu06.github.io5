@@ -841,6 +841,23 @@ void main() {
   function capture(namaFile) {
   modal.style.display = 'flex';
   modalTitle.innerText = "Hasil Output";
+  modalIframe.src = ""; // kosongkan iframe
+
+  modalIframe.style.display = "none";
+
+  let img = document.createElement("img");
+  img.src = namaFile;
+  img.style.width = "100%";
+  img.style.height = "100%";
+  img.style.objectFit = "contain";
+
+  const body = document.querySelector(".modal-body");
+  body.innerHTML = "";
+  body.appendChild(img);
+}
+  function capture(namaFile) {
+  modal.style.display = 'flex';
+  modalTitle.innerText = "Hasil Output";
 
   // ambil element
   const iframe = document.getElementById("dartpadIframe");
