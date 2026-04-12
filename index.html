@@ -833,23 +833,18 @@ void main() {
   }
 
 
-  function capture(namaFile) {
-  modal.style.display = 'flex';
-  modalTitle.innerText = "Hasil Output";
-  modalIframe.src = ""; // kosongkan iframe
-
-  modalIframe.style.display = "none";
-
-  let img = document.createElement("img");
-  img.src = namaFile;
-  img.style.width = "100%";
-  img.style.height = "100%";
-  img.style.objectFit = "contain";
-
-  const body = document.querySelector(".modal-body");
-  body.innerHTML = "";
-  body.appendChild(img);
-}
+  document.querySelectorAll('.btn-run').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const src = btn.getAttribute('data-src');
+      const card = btn.closest('.card');
+      const programName = card?.querySelector('h2')?.innerText || 'Program Dart';
+      if (src) {
+        openDartPad(src, programName);
+      } else {
+        alert('URL tidak tersedia');
+      }
+    });
+  });
 
   closeBtn.addEventListener('click', () => {
     modal.style.display = 'none';
