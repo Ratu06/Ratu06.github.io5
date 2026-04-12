@@ -407,6 +407,72 @@ void main() {
 //Nim: 251410010
 //Kelas: SI2A
 
+// nama file: libsealed.dart
+
+sealed class ApiResponse {
+  const ApiResponse();
+}
+
+// ================= SUCCESS =================
+class Success extends ApiResponse {
+  final String message;
+
+  const Success(this.message);
+}
+
+// ================= ERROR =================
+class ErrorResponse extends ApiResponse {
+  final String errorMessage;
+
+  const ErrorResponse(this.errorMessage);
+}
+void handle(ApiResponse response) {
+  if (response is Success) {
+    print("Success: ${response.message}");
+  } else if (response is ErrorResponse) {
+    print("Error: ${response.errorMessage}");
+  }
+}
+
+void main() {
+  handle(const Success("Data berhasil"));
+  handle(const ErrorResponse("Terjadi kesalahan"));
+}</code></pre>
+    <button class="btn-run" onclick="capture('n1.png')">Capture</button>
+  </div>
+  
+  <div class="card">
+    <h2>Slide 7 Keuntungan Sealed class</h2>
+    <p><strong>Keuntungan</strong></p>
+    <p>Exhaustive checking: Compiler tahu semua kemungkinan subclass</p>
+    <p>Pattern matching: Switch case yang aman</p>
+    <p>Documentation: Jelas hierarki terbatas</p>
+    <pre><code>//Nama: Ratu Klarisa Rahadianti
+//Nim: 251410010
+//Kelas: SI2A
+
+void handleResponse(ApiResponse response) {
+  switch (response) {
+    case Success():
+      print("Success: ${(response as Success).message}");
+      break;
+
+    case Error():
+      print("Error: ${(response as Error).errorMessage}");
+      break;
+
+    case Pending():
+      print("Pending: ${(response as Pending).message}");
+      break;
+  }
+}
+
+void main() {
+  handleResponse(Success("Data berhasil"));
+  handleResponse(Error("Terjadi kesalahan"));
+  handleResponse(Pending("Sedang diproses"));
+}
+
 sealed class ApiResponse {}
 
 class Success extends ApiResponse {
@@ -419,29 +485,11 @@ class Error extends ApiResponse {
   Error(this.errorMessage);
 }
 
-void handleResponse(ApiResponse response) {
-  if (response is Success) {
-    print("Success: ${response.message}");
-  } else if (response is Error) {
-    print("Error: ${response.errorMessage}");
-  }
-}
-
-void main() {
-  handleResponse(Success("Data berhasil"));
-  handleResponse(Error("Terjadi kesalahan"));
+class Pending extends ApiResponse {
+  final String message;
+  Pending(this.message);
 }</code></pre>
-    <button class="btn-run" onclick="capture('n1.png')">Capture</button>
-  </div>
-  
-  <div class="card">
-    <h2>Slide 7 Keuntungan Sealed class</h2>
-    <p><strong>Keuntungan</strong></p>
-    <p>Exhaustive checking: Compiler tahu semua kemungkinan subclass</p>
-    <p>Pattern matching: Switch case yang aman</p>
-    <p>Documentation: Jelas hierarki terbatas</p>
-    <button class="btn-run" onclick="capture('n2.png')">Capture</button>
-    <pre><code></code></pre>
+<button class="btn-run" onclick="capture('n2.png')">Capture</button>
     </div>
 
   <div class="card">
@@ -455,34 +503,24 @@ void main() {
 //Nim: 251410010
 //Kelas: SI2A
 
-
+// libbase.dart
+// 1. Definisi Base Class
 base class Animal {
-  void speak() {}
+  void speak() {
+    print("Hewan bersuara...");
+  }
 }
 
 base class Dog extends Animal {
   @override
   void speak() {
-    print("Woof!");
-  }
-}
-
-base class Cat extends Animal {
-  @override
-  void speak() {
-    print("Meow!");
+    print("woof woff!");
   }
 }
 
 void main() {
-  Animal animal = Animal();
-  animal.speak();
-
-  Animal dog = Dog();
-  dog.speak();
-
-  Animal cat = Cat();
-  cat.speak();
+  Animal myDog = Dog();
+  myDog.speak(); // Output: woof woff!
 }</code></pre>
      <button class="btn-run" onclick="capture('n3.png')">Capture</button>
 </div>
@@ -495,19 +533,20 @@ void main() {
 //Nim: 251410010
 //Kelas: SI2A
 
-
-base class Animal {
-  void speak() {}
+class Animal {
+  void speak() {
+    print("Hewan bersuara...");
+  }
 }
 
-base class Dog extends Animal {
+class Dog extends Animal {
   @override
   void speak() {
     print("Woof!");
   }
 }
 
-base class Cat extends Animal {
+class Cat extends Animal {
   @override
   void speak() {
     print("Meow!");
@@ -515,14 +554,14 @@ base class Cat extends Animal {
 }
 
 void main() {
-  Animal animal = Animal();
-  animal.speak();
+  Animal animal = Dog();
+  animal.speak(); // Woof!
 
   Animal dog = Dog();
-  dog.speak();
+  dog.speak(); // Woof!
 
   Animal cat = Cat();
-  cat.speak();
+  cat.speak(); // Meow!
 }</code></pre>
      <button class="btn-run" onclick="capture('n4.png')">Capture</button>
 </div>
@@ -538,6 +577,8 @@ void main() {
 //Nim: 251410010
 //Kelas: SI2A
 
+// libfinal.dart + testfinal.dart (digabung)
+
 final class Settings {
   final String theme;
   final int fontSize;
@@ -549,16 +590,24 @@ final class Settings {
   }
 }
 
-base class CustomSettings extends Settings {
+// ❌ Tidak boleh extends Settings karena final
+// jadi kita pakai class biasa yang berdiri sendiri
+class CustomSettings {
+  final Settings settings;
+
   CustomSettings(String theme, int fontSize)
-      : super(theme: theme, fontSize: fontSize);
+      : settings = Settings(theme: theme, fontSize: fontSize);
+
+  void showSettings() {
+    settings.showSettings();
+  }
 }
 
 void main() {
   Settings settings = Settings(theme: "Dark", fontSize: 14);
   settings.showSettings();
 
-  CustomSettings custom = CustomSettings("Light", 16);
+  CustomSettings custom = CustomSettings("Dark", 14);
   custom.showSettings();
 }</code></pre>
     <button class="btn-run" onclick="capture('n5.png')">Capture</button>
