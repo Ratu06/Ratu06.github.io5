@@ -397,15 +397,11 @@ void main() {
 
 
   <div class="card">
-    <h2>Slide 6 & 7 Sealed class</h2>
+    <h2>Slide 6 Sealed class</h2>
     <p><strong>Fitur</strong></p>
     <p>Tidak bisa id-ectend atau di-implement dar luar library</p>
     <p>Membatasi hierarki tipe yang diketahui saat compile-time</p>
     <p>Perfect untuk pattern matching</p>
-    <p><strong>Keuntungan</strong></p>
-    <p>Exhaustive checking: Compiler tahu semua kemungkinan subclass</p>
-    <p>Pattern matching: Switch case yang aman</p>
-    <p>Documentation: Jelas hierarki terbatas</p>
     <pre><code>
 /Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
@@ -435,16 +431,21 @@ void main() {
   handleResponse(Success("Data berhasil"));
   handleResponse(Error("Terjadi kesalahan"));
 }</code></pre>
-    <button class="btn-run" onclick="capture('1.png')">Capture</button>
+    <button class="btn-run" onclick="capture('n1.png')">Capture</button>
   </div>
- <script>
-function capture(namaFile) {
-  console.log("File yang dipilih:", namaFile);
-}
-</script>
   
   <div class="card">
-    <h2>Slide 8 & 9 Base class</h2>
+    <h2>Slide 7 Keuntungan Sealed class</h2>
+    <p><strong>Keuntungan</strong></p>
+    <p>Exhaustive checking: Compiler tahu semua kemungkinan subclass</p>
+    <p>Pattern matching: Switch case yang aman</p>
+    <p>Documentation: Jelas hierarki terbatas</p>
+    <button class="btn-run" onclick="capture('n2.png')">Capture</button>
+    <pre><code></code></pre>
+    </div>
+
+  <div class="card">
+    <h2>Slide 8  Base class</h2>
     <p><strong>Fitur:</strong>
     <p>Bisa di-extend, tapi tidak bisa di-implement</p>
     <p>Memastikan pewarisan dengan extends , bukan implements</p>
@@ -483,7 +484,47 @@ void main() {
   Animal cat = Cat();
   cat.speak();
 }</code></pre>
-     <button class="btn-run" onclick="capture('foto2.png')">Capture</button>
+     <button class="btn-run" onclick="capture('n3.png')">Capture</button>
+</div>
+
+<div class="card">
+    <h2>Slide 9 kapan menggunakan  Base class</h2>
+    <p>saat ingin membuat hierarki yang hanya bisa di-extend</p>
+    <pre><code>
+//Nama: Ratu Klarisa Rahadianti
+//Nim: 251410010
+//Kelas: SI2A
+
+
+base class Animal {
+  void speak() {}
+}
+
+base class Dog extends Animal {
+  @override
+  void speak() {
+    print("Woof!");
+  }
+}
+
+base class Cat extends Animal {
+  @override
+  void speak() {
+    print("Meow!");
+  }
+}
+
+void main() {
+  Animal animal = Animal();
+  animal.speak();
+
+  Animal dog = Dog();
+  dog.speak();
+
+  Animal cat = Cat();
+  cat.speak();
+}</code></pre>
+     <button class="btn-run" onclick="capture('n4.png')">Capture</button>
 </div>
 
      <!-- ========== SLIDE 10 Final Class ========== -->
@@ -520,7 +561,7 @@ void main() {
   CustomSettings custom = CustomSettings("Light", 16);
   custom.showSettings();
 }</code></pre>
-    <button class="btn-run" onclick="capture('foto3.png')">Capture</button>
+    <button class="btn-run" onclick="capture('n5.png')">Capture</button>
   </div>
   
   <div class="card">
@@ -761,7 +802,7 @@ void main() {
   print("Setelah delete: ${repo.read()}");
 }
 </code></pre>
-     <button class="btn-run" onclick="capture('foto4.png')">Capture</button>
+     <button class="btn-run" onclick="capture('4.png')">Capture</button>
   </div>
 
   <div class="card">
@@ -805,7 +846,7 @@ void main() {
   print("Bagi: ${MathUtils.bagi(10, 5)}");
 }
 </code></pre>
-     <button class="btn-run" onclick="capture('foto5.png')">Capture</button>
+     <button class="btn-run" onclick="capture('5.png')">Capture</button>
   </div>
 
 <footer>
