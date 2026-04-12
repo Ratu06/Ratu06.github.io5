@@ -787,68 +787,33 @@ void main() {
   <div class="card">
     <h2>Bonus Class Repository</h2>
     <div class="desc"></div>
-    <pre><code>// Nama: Ratu Klarisa Rahadianti
-// NIM: 251410010
-// Kelas: SI2A
+    <pre><code>//Nama: Ratu Klarisa Rahadianti
+//Nim: 251410010
+//Kelas: SI2A
 
-// ================= Base Class Repository =================
 abstract class Repository<T> {
-  void create(T data);
+  void create(T d);
   List<T> read();
-  void update(int index, T data);
-  void delete(int index);
+  void update(int i, T d);
+  void delete(int i);
 }
 
-// ================= Implementasi Repository =================
 class DataRepository<T> extends Repository<T> {
-  final List<T> _data = [];
+  final _d = <T>[];
 
-  @override
-  void create(T data) {
-    _data.add(data);
-    print('Data ditambahkan: $data');
-  }
-
-  @override
-  List<T> read() {
-    return _data;
-  }
-
-  @override
-  void update(int index, T data) {
-    if (index >= 0 && index < _data.length) {
-      _data[index] = data;
-      print('Data diupdate di index $index menjadi $data');
-    } else {
-      print('Index tidak valid');
-    }
-  }
-
-  @override
-  void delete(int index) {
-    if (index >= 0 && index < _data.length) {
-      print('Data dihapus: ${_data[index]}');
-      _data.removeAt(index);
-    } else {
-      print('Index tidak valid');
-    }
-  }
+  void create(T d) => _d.add(d);
+  List<T> read() => _d;
+  void update(int i, T d) => _d[i] = d;
+  void delete(int i) => _d.removeAt(i);
 }
 
-// ================= MAIN =================
 void main() {
-  var repo = DataRepository<String>();
-
-  repo.create("Buku");
-  repo.create("Pensil");
-
-  print("Data sekarang: ${repo.read()}");
-
-  repo.update(1, "Pulpen");
-  print("Setelah update: ${repo.read()}");
-
-  repo.delete(0);
-  print("Setelah delete: ${repo.read()}");
+  var r = DataRepository<String>();
+  r.create("Buku");
+  r.create("Pensil");
+  r.update(1, "Pulpen");
+  r.delete(0);
+  print(r.read());
 }
 </code></pre>
      <button class="btn-run" onclick="capture('4.png')">Capture</button>
