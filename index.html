@@ -827,24 +827,32 @@ void main() {
   const modalTitle = document.getElementById('modalTitle');
 
   function openDartPad(embedUrl, programTitle) {
-    modalIframe.src = embedUrl;
-    modalTitle.innerText = programTitle;
-    modal.style.display = 'flex';
-  }
+  const iframe = document.getElementById("dartpadIframe");
+  const img = document.getElementById("imageViewer");
 
+  img.style.display = "none";
+  iframe.style.display = "block";
 
-  document.querySelectorAll('.btn-run').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const src = btn.getAttribute('data-src');
-      const card = btn.closest('.card');
-      const programName = card?.querySelector('h2')?.innerText || 'Program Dart';
-      if (src) {
-        openDartPad(src, programName);
-      } else {
-        alert('URL tidak tersedia');
-      }
-    });
-  });
+  iframe.src = embedUrl;
+  modalTitle.innerText = programTitle;
+  modal.style.display = 'flex';
+}
+
+  function capture(namaFile) {
+  modal.style.display = 'flex';
+  modalTitle.innerText = "Hasil Output";
+
+  // ambil element
+  const iframe = document.getElementById("dartpadIframe");
+  const img = document.getElementById("imageViewer");
+
+  // sembunyikan iframe
+  iframe.style.display = "none";
+
+  // tampilkan image
+  img.style.display = "block";
+  img.src = namaFile;
+}
 
   closeBtn.addEventListener('click', () => {
     modal.style.display = 'none';
