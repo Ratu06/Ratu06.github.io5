@@ -435,7 +435,7 @@ void main() {
   handleResponse(Success("Data berhasil"));
   handleResponse(Error("Terjadi kesalahan"));
 }</code></pre>
-    <button class="btn-capture" onclick="capture('foto1.png')">Capture</button>
+    <button class="btn-run" onclick="capture('1.png')">Capture</button>
   </div>
  
   <div class="card">
@@ -832,20 +832,23 @@ void main() {
     modal.style.display = 'flex';
   }
 
-  document.querySelectorAll('.btn-run').forEach(btn => {
-  const src = btn.getAttribute('data-src');
+  function capture(namaFile) {
+  modal.style.display = 'flex';
+  modalTitle.innerText = "Hasil Output";
+  modalIframe.src = ""; // kosongkan iframe
 
-  // penting: hanya tombol yang punya data-src yang diproses
-  if (!src) return;
+  modalIframe.style.display = "none";
 
-  btn.addEventListener('click', () => {
-    const card = btn.closest('.card');
-    const programName = card?.querySelector('h2')?.innerText || 'Program Dart';
+  let img = document.createElement("img");
+  img.src = namaFile;
+  img.style.width = "100%";
+  img.style.height = "100%";
+  img.style.objectFit = "contain";
 
-    openDartPad(src, programName);
-  });
-});
-  
+  const body = document.querySelector(".modal-body");
+  body.innerHTML = "";
+  body.appendChild(img);
+}
   document.querySelectorAll('.btn-run').forEach(btn => {
     btn.addEventListener('click', () => {
       const src = btn.getAttribute('data-src');
