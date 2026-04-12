@@ -284,7 +284,7 @@ void main() {
     <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=ad7c1a26c40eb73b0b28f227dcc7d08a&run=true">Lihat Program</button>
   </div>
 
-  <!-- ========== Studi Kasus ixin Mixin dengan State ========== -->
+  <!-- ========== Studi Kasus Mixin dengan State ========== -->
   <div class="card">
     <h2>Slide 4 Studi Kasus ixin Mixin dengan State</h2>
     <div class="desc">Referensi parent bisa menampung objek child. Method yang dipanggil sesuai objek asli (runtime).</div>
@@ -435,9 +435,14 @@ void main() {
   handleResponse(Success("Data berhasil"));
   handleResponse(Error("Terjadi kesalahan"));
 }</code></pre>
-   <button class="btn-run" onclick="openImage(1.png)">Lihat foto</button>
+    <button class="btn-run" onclick="capture('1.png')">Capture</button>
   </div>
- 
+ <script>
+function capture(namaFile) {
+  console.log("File yang dipilih:", namaFile);
+}
+</script>
+  
   <div class="card">
     <h2>Slide 8 & 9 Base class</h2>
     <p><strong>Fitur:</strong>
@@ -478,7 +483,7 @@ void main() {
   Animal cat = Cat();
   cat.speak();
 }</code></pre>
-    <button class="btn-run" style="margin: 15px 0;" data-src="https://dartpad.dev/embed-dart.html?id=695ad4c4a29c81e65974e59d9dddb21f&run=true">Lihat foto</button>
+     <button class="btn-run" onclick="capture('foto2.png')">Capture</button>
 </div>
 
      <!-- ========== SLIDE 10 Final Class ========== -->
@@ -515,9 +520,9 @@ void main() {
   CustomSettings custom = CustomSettings("Light", 16);
   custom.showSettings();
 }</code></pre>
-    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=d136b270bec418e26e894f676f02b542&run=true">Lihat foto</button>
+    <button class="btn-run" onclick="capture('foto3.png')">Capture</button>
   </div>
-
+  
   <div class="card">
     <h2>Slide 11 Perbedaan Class Modifiers</h2>
     <p> <strong>Sealed:</strong> Hanya bisa di-extend di dalam file yang sama; tidak bisa di-extend atau di-implement di luar library.</p>
@@ -756,7 +761,7 @@ void main() {
   print("Setelah delete: ${repo.read()}");
 }
 </code></pre>
-    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=ad7c1a26c40eb73b0b28f227dcc7d08a&run=true">Lihat foto</button>
+     <button class="btn-run" onclick="capture('foto4.png')">Capture</button>
   </div>
 
   <div class="card">
@@ -800,7 +805,7 @@ void main() {
   print("Bagi: ${MathUtils.bagi(10, 5)}");
 }
 </code></pre>
-    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=ad7c1a26c40eb73b0b28f227dcc7d08a&run=true">Lihat foto</button>
+     <button class="btn-run" onclick="capture('foto5.png')">Capture</button>
   </div>
 
 <footer>
@@ -827,16 +832,10 @@ void main() {
   const modalTitle = document.getElementById('modalTitle');
 
   function openDartPad(embedUrl, programTitle) {
-  const iframe = document.getElementById("dartpadIframe");
-  const img = document.getElementById("imageViewer");
-
-  img.style.display = "none";
-  iframe.style.display = "block";
-
-  iframe.src = embedUrl;
-  modalTitle.innerText = programTitle;
-  modal.style.display = 'flex';
-}
+    modalIframe.src = embedUrl;
+    modalTitle.innerText = programTitle;
+    modal.style.display = 'flex';
+  }
 
   function capture(namaFile) {
   modal.style.display = 'flex';
@@ -855,21 +854,19 @@ void main() {
   body.innerHTML = "";
   body.appendChild(img);
 }
-  function capture(namaFile) {
-  modal.style.display = 'flex';
-  modalTitle.innerText = "Hasil Output";
 
-  // ambil element
-  const iframe = document.getElementById("dartpadIframe");
-  const img = document.getElementById("imageViewer");
-
-  // sembunyikan iframe
-  iframe.style.display = "none";
-
-  // tampilkan image
-  img.style.display = "block";
-  img.src = namaFile;
-}
+  document.querySelectorAll('.btn-run').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const src = btn.getAttribute('data-src');
+      const card = btn.closest('.card');
+      const programName = card?.querySelector('h2')?.innerText || 'Program Dart';
+      if (src) {
+        openDartPad(src, programName);
+      } else {
+        alert('URL tidak tersedia');
+      }
+    });
+  });
 
   closeBtn.addEventListener('click', () => {
     modal.style.display = 'none';
