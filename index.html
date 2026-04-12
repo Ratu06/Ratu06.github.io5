@@ -397,238 +397,125 @@ void main() {
 
 
   <div class="card">
-    <h2>Slide 6 Sealed class</h2>
-    <p>Fitur</p>
+    <h2>Slide 6 & 7 Sealed class</h2>
+    <p><strong>Fitur</strong></p>
     <p>Tidak bisa id-ectend atau di-implement dar luar library</p>
     <p>Membatasi hierarki tipe yang diketahui saat compile-time</p>
     <p>Perfect untuk pattern matching</p>
+    <p><strong>Keuntungan</strong></p>
+    <p>Exhaustive checking: Compiler tahu semua kemungkinan subclass</p>
+    <p>Pattern matching: Switch case yang aman</p>
+    <p>Documentation: Jelas hierarki terbatas</p>
     <pre><code>
-//Nama:Ratu Klarisa
-//NIM:251410010
-//Kelas:SI2A
-
-class Kendaraan {}
-class Mobil extends Kendaraan {
-  void klakson() => print('Tin! Tin!');
-}
-
-void main() {
-  Kendaraan k = Mobil();
-  if (k is Mobil) {
-    (k as Mobil).klakson();
-  }
-  // safe casting with as?
-  (k as Mobil?)?.klakson();
-}</code></pre>
-    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=d02382dfe2c22442f9bf97f28e8ae22c&run=true">Lihat Program</button>
-  </div>
-
-  <div class="card">
-    <h2>Slide 7: Keuntungan sealed class</h2>
-    <p><strong>Exhaustive checking</strong>: kompiler tahu semua kemungkinan subclass</p>
-    <p><strong>Pattern Matching</strong>: switch case yang aman</p>
-    <p><strong> Documentation</strong>: jelas hierarki terbatas</p>
-    <pre><code>
-//Nama: Ratu Klarisa
+/Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
 //Kelas: SI2A
 
-abstract class Hewan {
-  void bersuara();
+sealed class ApiResponse {}
+
+class Success extends ApiResponse {
+  final String message;
+  Success(this.message);
 }
-class Kucing extends Hewan {
-  @override void bersuara() => print('Meong 🐱');
+
+class Error extends ApiResponse {
+  final String errorMessage;
+  Error(this.errorMessage);
 }
-class Anjing extends Hewan {
-  @override void bersuara() => print('Guk guk 🐶');
-}
-class Burung extends Hewan {
-  @override void bersuara() => print('Cuit cuit 🐦');
-}
-void main() {
-  List&lt;Hewan&gt; hewanList = [Kucing(), Anjing(), Burung()];
-  for (var h in hewanList) {
-    h.bersuara();
+
+void handleResponse(ApiResponse response) {
+  if (response is Success) {
+    print("Success: ${response.message}");
+  } else if (response is Error) {
+    print("Error: ${response.errorMessage}");
   }
+}
+
+void main() {
+  handleResponse(Success("Data berhasil"));
+  handleResponse(Error("Terjadi kesalahan"));
 }</code></pre>
-    <button class="btn-run" style="margin: 15px 0;" data-src="https://dartpad.dev/embed-dart.html?id=695ad4c4a29c81e65974e59d9dddb21f&run=true">Lihat Program</button>
+    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=d02382dfe2c22442f9bf97f28e8ae22c&run=true">Lihat foto</button>
+  </div>
+
+  <div class="card">
+    <h2>Slide 8 & 9 Base class</h2>
+    <p><strong>Fitur:</strong>
+    <p>Bisa di-extend, tapi tidak bisa di-implement</p>
+    <p>Memastikan pewarisan dengan extends , bukan implements</p>
+    <p>Berguna untuk library yang ingin mengontrol inheritance</p>
+    <pre><code>
+//Nama: Ratu Klarisa Rahadianti
+//Nim: 251410010
+//Kelas: SI2A
+
+
+base class Animal {
+  void speak() {}
+}
+
+base class Dog extends Animal {
+  @override
+  void speak() {
+    print("Woof!");
+  }
+}
+
+base class Cat extends Animal {
+  @override
+  void speak() {
+    print("Meow!");
+  }
+}
+
+void main() {
+  Animal animal = Animal();
+  animal.speak();
+
+  Animal dog = Dog();
+  dog.speak();
+
+  Animal cat = Cat();
+  cat.speak();
+}</code></pre>
+    <button class="btn-run" style="margin: 15px 0;" data-src="https://dartpad.dev/embed-dart.html?id=695ad4c4a29c81e65974e59d9dddb21f&run=true">Lihat foto</button>
 </div>
 
-     <!-- ========== SLIDE 8 Base Class ========== -->
+     <!-- ========== SLIDE 10 Final Class ========== -->
   <div class="card">
-    <h2>Slide 8: Base Class</h2>
+    <h2>Slide 10 Final Class</h2>
    <p><strong>Fitur:</strong></p>
 <p>Bisa di-extend, tapi tidak bisa di-implement</p>
 <p>Memastikan pewarisan dengan extends , bukan implements</p>
 <p>Berguna untuk library yang ingin mengontrol inheritance</p>
-<pre><code>//Nama:
+<pre><code>//Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
 //Kelas: SI2A
 
-// Abstract class
-abstract class Pekerja {
-  void bekerja(); // abstract method
+final class Settings {
+  final String theme;
+  final int fontSize;
 
-  void info() {
-    print('Saya adalah seorang pekerja');
+  Settings({required this.theme, required this.fontSize});
+
+  void showSettings() {
+    print("Theme: $theme, Font Size: $fontSize");
   }
 }
 
-// Class turunan
-class Programmer extends Pekerja {
-  @override
-  void bekerja() {
-    print('Programmer sedang coding');
-  }
-}
-
-class Dokter extends Pekerja {
-  @override
-  void bekerja() {
-    print('Dokter sedang mengobati pasien');
-  }
-}
-
-class Guru extends Pekerja {
-  @override
-  void bekerja() {
-    print('Guru sedang mengajar');
-  }
+base class CustomSettings extends Settings {
+  CustomSettings(String theme, int fontSize)
+      : super(theme: theme, fontSize: fontSize);
 }
 
 void main() {
-  // Polimorfisme (List Pekerja)
-  List<Pekerja> pekerjaList = [
-    Programmer(),
-    Dokter(),
-    Guru()
-  ];
+  Settings settings = Settings(theme: "Dark", fontSize: 14);
+  settings.showSettings();
 
-  for (var p in pekerjaList) {
-    p.info();
-    p.bekerja();
-    print('---');
-  }
+  CustomSettings custom = CustomSettings("Light", 16);
+  custom.showSettings();
 }</code></pre>
-    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=d136b270bec418e26e894f676f02b542&run=true">Lihat Program</button>
-  </div>
-
-  <div class="card">
-    <h2>Slide 9 Kapan Menggunakan Base Class</h2>
-    <div class="desc">Saat ingin membuat hierarki yang hanya boleh di-extend</div>
-    <pre><code>//Nama: Ratu Klarisa 
-//Nim: 251410010
-//Kelas: SI2A
-
-class Komputer {
-  void hitung() {
-    print('Komputer menghitung data');
-  }
-}
-
-class Kamera {
-  void foto() {
-    print('Kamera mengambil gambar');
-  }
-}
-
-class Telepon {
-  void telepon() {
-    print('Telepon melakukan panggilan');
-  }
-}
-
-// Tablet mewarisi semuanya (implements)
-class Tablet implements Komputer, Kamera, Telepon {
-  @override
-  void hitung() {
-    print('Tablet menghitung data');
-  }
-
-  @override
-  void foto() {
-    print('Tablet mengambil gambar');
-  }
-
-  @override
-  void telepon() {
-    print('Tablet melakukan panggilan');
-  }
-}
-
-void main() {
-  Tablet tablet = Tablet();
-  tablet.hitung();
-  tablet.foto();
-  tablet.telepon();
-}</code></pre>
-    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=84ecab010a57f0f479a7e59ac1bf5749&run=true">Lihat Program</button>
-  </div>
-
-  <div class="card">
-    <h2>Slide 10 Final class</h2>
-    <p><strong>Fitur:</strong></p>
-<p>Tidak bisa di-extend atau di-implement dari luar library</p>
-<p>Tapi bisa di-extend/implement di dalam library yang sama</p>
-<p>Berguna untuk class yang ingin "ditutup" untuk modifikasi</p>
-    <pre><code>//Nama:Ratu Klarisa
-//Nim: 251410010
-//Kelas:SI2A
-
-import 'dart:math';
-
-class MathUtils {
-  // Faktorial
-  static int faktorial(int n) {
-    if (n <= 1) return 1;
-    return n * faktorial(n - 1);
-  }
-
-  // Cek bilangan prima
-  static bool isPrima(int n) {
-    if (n < 2) return false;
-    for (int i = 2; i <= sqrt(n); i++) {
-      if (n % i == 0) return false;
-    }
-    return true;
-  }
-
-  // Membulatkan
-  static double bulatkan(double angka, int digit) {
-    return double.parse(angka.toStringAsFixed(digit));
-  }
-
-  // Random integer
-  static int randomInt(int min, int max) {
-    return min + Random().nextInt(max - min + 1);
-  }
-
-  // Rata-rata
-  static double rataRata(List<int> data) {
-    return data.reduce((a, b) => a + b) / data.length;
-  }
-
-  // Median
-  static double median(List<int> data) {
-    data.sort();
-    int n = data.length;
-    if (n % 2 == 0) {
-      return (data[n ~/ 2 - 1] + data[n ~/ 2]) / 2;
-    } else {
-      return data[n ~/ 2].toDouble();
-    }
-  }
-}
-
-void main() {
-  print(MathUtils.faktorial(5));
-  print(MathUtils.isPrima(7));
-  print(MathUtils.bulatkan(3.14159, 2));
-  print(MathUtils.randomInt(1, 10));
-  print(MathUtils.rataRata([10, 20, 30]));
-  print(MathUtils.median([10, 20, 30, 40]));
-}</code></pre>
-    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=0c0578e0b81fc53b72eddf61115d650f&run=true">Lihat Program</button>
+    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=d136b270bec418e26e894f676f02b542&run=true">Lihat foto</button>
   </div>
 
     </div>
@@ -792,9 +679,134 @@ void main() {
     <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=7903e7bad7a82eae7184589c1f7ff30a&run=true">Lihat Program</button>
   </div>
 
+  <div class="card">
+    <h2>Ringkasan</h2>
+    <p>Ringkasan</p>
+    <p>Sealed: Hierarki tertutup & aman untuk pattern matching.</p>
+    <p>Base: Hanya bisa di-extend (tutup akses implement).
+    <p>Final: Segel total (tidak bisa di-extend atau di-implement).</p>
+    <p>Quick Guide:</p>
+    <p>Sealed: rightarrow Untuk State atau Result terbatas.</p>
+    <p>Base: rightarrow Untuk Framework atau Base Class.</p>
+    <p>Final: rightarrow Untuk Utility atau Constant Class.</p>
+  </div>
+
+  <div class="card">
+    <h2>Bonus Class Repository</h2>
+    <div class="desc"></div>
+    <pre><code>// Nama: Ratu Klarisa Rahadianti
+// NIM: 251410010
+// Kelas: SI2A
+
+// ================= Base Class Repository =================
+abstract class Repository<T> {
+  void create(T data);
+  List<T> read();
+  void update(int index, T data);
+  void delete(int index);
+}
+
+// ================= Implementasi Repository =================
+class DataRepository<T> extends Repository<T> {
+  final List<T> _data = [];
+
+  @override
+  void create(T data) {
+    _data.add(data);
+    print('Data ditambahkan: $data');
+  }
+
+  @override
+  List<T> read() {
+    return _data;
+  }
+
+  @override
+  void update(int index, T data) {
+    if (index >= 0 && index < _data.length) {
+      _data[index] = data;
+      print('Data diupdate di index $index menjadi $data');
+    } else {
+      print('Index tidak valid');
+    }
+  }
+
+  @override
+  void delete(int index) {
+    if (index >= 0 && index < _data.length) {
+      print('Data dihapus: ${_data[index]}');
+      _data.removeAt(index);
+    } else {
+      print('Index tidak valid');
+    }
+  }
+}
+
+// ================= MAIN =================
+void main() {
+  var repo = DataRepository<String>();
+
+  repo.create("Buku");
+  repo.create("Pensil");
+
+  print("Data sekarang: ${repo.read()}");
+
+  repo.update(1, "Pulpen");
+  print("Setelah update: ${repo.read()}");
+
+  repo.delete(0);
+  print("Setelah delete: ${repo.read()}");
+}
+</code></pre>
+    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=ad7c1a26c40eb73b0b28f227dcc7d08a&run=true">Lihat foto</button>
+  </div>
+
+  <div class="card">
+    <h2>Bonus Final Class Mathutils</h2>
+    <div class="desc"></div>
+    <pre><code>// Nama: Ratu Klarisa Rahadianti
+// NIM: 251410010
+// Kelas: SI2A
+
+// ================= Final Class MathUtils =================
+final class MathUtils {
+  // Penjumlahan
+  static int tambah(int a, int b) {
+    return a + b;
+  }
+
+  // Pengurangan
+  static int kurang(int a, int b) {
+    return a - b;
+  }
+
+  // Perkalian
+  static int kali(int a, int b) {
+    return a * b;
+  }
+
+  // Pembagian
+  static double bagi(int a, int b) {
+    if (b == 0) {
+      throw Exception("Tidak bisa dibagi dengan nol");
+    }
+    return a / b;
+  }
+}
+
+// ================= MAIN =================
+void main() {
+  print("Tambah: ${MathUtils.tambah(10, 5)}");
+  print("Kurang: ${MathUtils.kurang(10, 5)}");
+  print("Kali: ${MathUtils.kali(10, 5)}");
+  print("Bagi: ${MathUtils.bagi(10, 5)}");
+}
+</code></pre>
+    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=ad7c1a26c40eb73b0b28f227dcc7d08a&run=true">Lihat foto</button>
+  </div>
 
 <footer>
-  <p>📁 Resume Sesi 4 – Polimorfisme & Abstraksi | Kode siap eksekusi di DartPad | Dibuat untuk GitHub Pages</p>
+  <p>📁 Resume Sesi 5 – Multiple Inheritance & Class Modifiers</p>
   <p>Ratu Klarisa Rahadianti — 251410010 — SI2A</p>
 </footer>
 
