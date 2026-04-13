@@ -979,5 +979,72 @@ void main() {
     }
   });
 </script>
+
+    <div id="captureModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Hasil Capture</h3>
+        <span class="close" id="closeModal">&times;</span>
+      </div>
+      <div id="modalContentBody" class="modal-body" style="background: #0d1117; position: relative;">
+         </div>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById("captureModal");
+    const modalBody = document.getElementById("modalContentBody");
+    const modalTitle = document.getElementById("modalTitle");
+    const closeBtn = document.getElementById("closeModal");
+
+    // Menangani semua tombol dengan class btn-run
+    document.querySelectorAll(".btn-run").forEach(button => {
+      button.onclick = function() {
+        const imgName = this.getAttribute("data-img");
+        const dartPadSrc = this.getAttribute("data-src");
+
+        // Jika tombol "Capture" diklik (punya atribut data-img)
+        if (imgName) {
+          const code = this.closest(".card").querySelector("pre code").innerText;
+          
+          // Membuat tampilan ala editor kode
+          const numberedCode = code.split('\n').map((line, i) => {
+            return `<div style="display: flex;"><span style="color: #484f58; width: 30px; text-align: right; margin-right: 20px; user-select: none;">${i + 1}</span><span style="color: #c9d1d9;">${line || ' '}</span></div>`;
+          }).join('');
+
+          modalBody.innerHTML = `
+            <div style="background: #161b22; padding: 10px 20px; color: #8b949e; font-size: 0.9rem; border-bottom: 1px solid #30363d;">
+               <span style="color: #58a6ff;">●</span> n.dart
+            </div>
+            <div style="padding: 20px; font-family: 'Fira Code', monospace; font-size: 1rem; line-height: 1.5; overflow-y: auto; height: calc(100% - 40px);">
+               ${numberedCode}
+            </div>
+          `;
+          modalTitle.innerText = "Hasil Capture: " + imgName;
+          modal.style.display = "flex";
+        } 
+        
+        // Jika tombol "Lihat Program" diklik (punya atribut data-src)
+        else if (dartPadSrc) {
+          modalBody.innerHTML = `<iframe src="${dartPadSrc}" style="width:100%; height:100%; border:none; background: white;"></iframe>`;
+          modalTitle.innerText = "DartPad Viewer";
+          modal.style.display = "flex";
+        }
+      };
+    });
+
+    // Fungsi tutup modal
+    closeBtn.onclick = () => {
+      modal.style.display = "none";
+      modalBody.innerHTML = ""; // Bersihkan isi saat tutup
+    }
+    
+    window.onclick = (e) => { 
+      if (e.target == modal) {
+        modal.style.display = "none";
+        modalBody.innerHTML = "";
+      } 
+    }
+  </script>
 </body>
 </html>
