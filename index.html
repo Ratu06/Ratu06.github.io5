@@ -193,7 +193,11 @@
 
     .modal-body {
       flex: 1;
-      padding: 0.5rem;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .modal-body iframe {
@@ -202,6 +206,14 @@
       border: none;
       border-radius: 1rem;
       background: #fefefe;
+    }
+
+    .modal-body img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
   </style>
 </head>
@@ -907,75 +919,158 @@ void main() {
   const modalTitle = document.getElementById('modalTitle');
   const modalBody = document.querySelector(".modal-body");
 
-  // =======================
-  // OPEN DARTPAD
-  // =======================
+  // Fungsi untuk mengubah teks output menjadi gambar (dataURL)
+  function textToImage(outputText, title) {
+    // Buat canvas dengan latar belakang terminal
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Pengaturan font dan padding
+    const fontFamily = "'Fira Code', 'Cascadia Code', monospace";
+    const fontSize = 16;
+    const lineHeight = 1.6;
+    const paddingX = 30;
+    const paddingY = 30;
+    const bgColor = '#0a0f1c';
+    const textColor = '#a5f3fc';
+    const borderColor = '#3b82f6';
+    
+    // Ukuran canvas sementara untuk mengukur teks
+    ctx.font = `${fontSize}px ${fontFamily}`;
+    const lines = outputText.split('\n');
+    let maxWidth = 0;
+    for (let line of lines) {
+      const metrics = ctx.measureText(line);
+      maxWidth = Math.max(maxWidth, metrics.width);
+    }
+    const canvasWidth = Math.max(400, maxWidth + paddingX * 2);
+    const canvasHeight = Math.max(200, (lines.length * fontSize * lineHeight) + paddingY * 2);
+    
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    
+    // Gambar ulang dengan ukuran sebenarnya
+    ctx.font = `${fontSize}px ${fontFamily}`;
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(5, 5, canvasWidth - 10, canvasHeight - 10);
+    
+    ctx.fillStyle = textColor;
+    ctx.textBaseline = 'top';
+    for (let i = 0; i < lines.length; i++) {
+      ctx.fillText(lines[i], paddingX, paddingY + i * fontSize * lineHeight);
+    }
+    
+    // Tambahkan judul kecil
+    ctx.font = `bold ${fontSize-2}px ${fontFamily}`;
+    ctx.fillStyle = '#facc15';
+    ctx.fillText(`📟 ${title}`, paddingX, paddingY - 20);
+    
+    return canvas.toDataURL('image/png');
+  }
+
+  // Fungsi untuk menampilkan gambar hasil capture (dinamis)
+  function showCaptureImage(outputText, programTitle) {
+    // Bersihkan modal body
+    while (modalBody.firstChild) {
+      modalBody.removeChild(modalBody.firstChild);
+    }
+    const img = document.createElement('img');
+    const imgData = textToImage(outputText, programTitle);
+    img.src = imgData;
+    img.style.maxWidth = '100%';
+    img.style.maxHeight = '100%';
+    img.style.objectFit = 'contain';
+    modalBody.appendChild(img);
+    modalTitle.innerText = `📸 Capture: ${programTitle}`;
+    modal.style.display = 'flex';
+  }
+
+  // Mapping output untuk setiap card (berdasarkan judul)
+  function getOutputForCard(cardTitle) {
+    if (cardTitle.includes("Slide 6 Sealed class")) {
+      return `=== SEALED CLASS DEMO ===\nSuccess: Data berhasil\nError: Terjadi kesalahan`;
+    }
+    if (cardTitle.includes("Slide 7 Keuntungan Sealed class")) {
+      return `=== SEALED CLASS + SWITCH ===\nSuccess: Data berhasil\nError: Terjadi kesalahan`;
+    }
+    if (cardTitle.includes("Slide 8  Base class")) {
+      return `=== BASE CLASS (Animal/Dog) ===\nwoof woff!`;
+    }
+    if (cardTitle.includes("Slide 9 kapan menggunakan  Base class")) {
+      return `=== BASE CLASS (Woof!) ===\nWoof!`;
+    }
+    if (cardTitle.includes("Slide 10 Final Class")) {
+      return `=== FINAL CLASS SETTINGS ===\nTheme: Dark, Font Size: 14\nTheme: Dark, Font Size: 14`;
+    }
+    if (cardTitle.includes("Bonus base Class Repository")) {
+      return `=== BASE CLASS REPOSITORY ===\nCreate: User A\nMenampilkan semua user\nUpdate id=1: User B\nDelete id=2`;
+    }
+    if (cardTitle.includes("Bonus Final Class Mathutils")) {
+      return `=== FINAL CLASS MATHUTILS ===\nTambah: 15\nKurang: 5\nKali: 50\nBagi: 2.0`;
+    }
+    return "// Tidak ada output simulasi untuk contoh ini.\n// Silakan jalankan kode di DartPad (jika tersedia).";
+  }
+
+  // Buka DartPad
   function openDartPad(embedUrl, programTitle) {
-    modalBody.innerHTML = "";
+    while (modalBody.firstChild) {
+      modalBody.removeChild(modalBody.firstChild);
+    }
     modalBody.appendChild(modalIframe);
     modalIframe.style.display = "block";
-
     modalIframe.src = embedUrl;
     modalTitle.innerText = programTitle;
     modal.style.display = 'flex';
   }
 
-  // =======================
-  // CAPTURE IMAGE
-  // =======================
-  function capture(imgFile) {
-    modalBody.innerHTML = "";
-
-    const img = document.createElement("img");
-    img.src = imgFile;
-    img.style.width = "100%";
-    img.style.height = "100%";
-    img.style.objectFit = "contain";
-
-    modalBody.appendChild(img);
-
-    modalTitle.innerText = "Hasil Capture";
-    modal.style.display = 'flex';
-  }
-
-  // =======================
-  // DETECT BUTTON TYPE
-  // =======================
+  // Event listener untuk semua tombol
   document.querySelectorAll('.btn-run').forEach(btn => {
     btn.addEventListener('click', () => {
-
-      const img = btn.getAttribute('data-img');
-      const src = btn.getAttribute('data-src');
+      const imgAttr = btn.getAttribute('data-img');
+      const srcAttr = btn.getAttribute('data-src');
       const card = btn.closest('.card');
-      const programName = card?.querySelector('h2')?.innerText || 'Program Dart';
+      const cardTitle = card?.querySelector('h2')?.innerText || '';
+      const programName = cardTitle || 'Program Dart';
 
-      // 👉 JIKA ADA GAMBAR = CAPTURE
-      if (img) {
-        capture(img);
+      // Jika tombol memiliki data-img (Capture)
+      if (imgAttr) {
+        const output = getOutputForCard(cardTitle);
+        showCaptureImage(output, programName);
         return;
       }
 
-      // 👉 JIKA ADA DARTPAD = RUN
-      if (src) {
-        openDartPad(src, programName);
+      // Jika tombol memiliki data-src (DartPad)
+      if (srcAttr) {
+        openDartPad(srcAttr, programName);
         return;
       }
-
     });
   });
 
-  // =======================
-  // CLOSE MODAL
-  // =======================
+  // Tutup modal
   closeBtn.addEventListener('click', () => {
     modal.style.display = 'none';
     modalIframe.src = 'about:blank';
+    while (modalBody.firstChild) {
+      modalBody.removeChild(modalBody.firstChild);
+    }
+    modalBody.appendChild(modalIframe);
+    modalIframe.style.display = "block";
   });
 
   window.addEventListener('click', (e) => {
     if (e.target === modal) {
       modal.style.display = 'none';
       modalIframe.src = 'about:blank';
+      while (modalBody.firstChild) {
+        modalBody.removeChild(modalBody.firstChild);
+      }
+      modalBody.appendChild(modalIframe);
+      modalIframe.style.display = "block";
     }
   });
 </script>
