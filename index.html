@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>OOP Dart - Sesi 5: Multiple Inheritance & Class Modifiers</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <style>
     * {
       margin: 0;
@@ -28,7 +28,7 @@
     }
 
     header h1 {
-      font-size: 2.7rem;
+      font-size: clamp(1.8rem, 5vw, 2.7rem);
       background: linear-gradient(135deg, #a5f3fc, #60a5fa);
       background-clip: text;
       -webkit-background-clip: text;
@@ -37,7 +37,7 @@
     }
 
     .subhead {
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: #cbd5e1;
     }
 
@@ -53,7 +53,7 @@
     .container {
       max-width: 1280px;
       margin: 0 auto;
-      padding: 2rem 1.5rem;
+      padding: 2rem 1rem;
     }
 
     .card {
@@ -73,7 +73,7 @@
     }
 
     .card h2 {
-      font-size: 1.7rem;
+      font-size: 1.6rem;
       margin-bottom: 0.75rem;
       color: #93c5fd;
       border-left: 5px solid #3b82f6;
@@ -100,8 +100,22 @@
       font-size: 0.85rem;
       border: 1px solid #2d3a5e;
       margin: 1rem 0;
-      white-space: pre-wrap;
-      word-break: break-word;
+      white-space: pre;
+      word-break: normal;
+    }
+
+    /* responsif untuk mobile */
+    @media (max-width: 640px) {
+      pre {
+        font-size: 0.75rem;
+        padding: 0.75rem;
+      }
+      .card {
+        padding: 1rem;
+      }
+      .card h2 {
+        font-size: 1.3rem;
+      }
     }
 
     code {
@@ -120,6 +134,8 @@
       transition: all 0.2s;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
       margin-top: 0.5rem;
+      margin-right: 0.75rem;
+      display: inline-block;
     }
 
     .btn-run:hover {
@@ -140,7 +156,7 @@
       font-size: 0.85rem;
     }
 
-    /* modal */
+    /* MODAL STYLE - DIPERBAIKI UNTUK UKURAN */
     .modal {
       display: none;
       position: fixed;
@@ -148,7 +164,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.95);
       z-index: 2000;
       align-items: center;
       justify-content: center;
@@ -159,10 +175,12 @@
       width: 90%;
       max-width: 1100px;
       height: 85%;
+      max-height: 90vh;
       border-radius: 1.5rem;
       display: flex;
       flex-direction: column;
       border: 1px solid #3b82f6;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.5);
     }
 
     .modal-header {
@@ -193,14 +211,44 @@
 
     .modal-body {
       flex: 1;
-      padding: 0.5rem;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
     }
 
-    .modal-body iframe {
+    /* Tampilan output program / simulasi */
+    .output-console {
+      background: #0a0f1c;
+      border-radius: 1rem;
+      padding: 1.2rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      color: #a5f3fc;
+      border: 1px solid #2d3a5e;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    .output-console h4 {
+      color: #facc15;
+      margin-bottom: 0.8rem;
+      font-size: 1rem;
+    }
+
+    .iframe-fallback {
+      width: 100%;
+      height: 100%;
+      min-height: 400px;
+    }
+
+    iframe {
       width: 100%;
       height: 100%;
       border: none;
-      border-radius: 1rem;
+      border-radius: 0.75rem;
       background: #fefefe;
     }
   </style>
@@ -217,11 +265,11 @@
   <div class="card">
     <h2>📖 Materi Sesi 5</h2>
     <ul style="margin-left: 1.5rem; display: flex; flex-direction: column; gap: 0.4rem;">
-      <li>🔹 <strong>Multipel Inheritance dengan Mixin</strong> - Dart tidak mendukung multiple Inheritance langsung, tapi menggunakan<code>mixin</code>untuk menggabungkan perilaku dari beberapa kelas.</li>
-      <li>🔹 <strong>Sealed class</strong> - Hierarki tertutup, tidak bisa di-extend/implement dari luar library. cocok untuk pattern maching exhausetive.</li>
-      <li>🔹 <strong>Base class</strong> - Bisa di-extend dari luar, tapi tidak bisa di-implement. Memastikan pewarisan menggunakan<code>Extends</code>.</li>
+      <li>🔹 <strong>Multipel Inheritance dengan Mixin</strong> - Dart tidak mendukung multiple inheritance langsung, tapi menggunakan <code>mixin</code> untuk menggabungkan perilaku dari beberapa kelas.</li>
+      <li>🔹 <strong>Sealed class</strong> - Hierarki tertutup, tidak bisa di-extend/implement dari luar library. cocok untuk pattern matching exhaustive.</li>
+      <li>🔹 <strong>Base class</strong> - Bisa di-extend dari luar, tapi tidak bisa di-implement. Memastikan pewarisan menggunakan <code>extends</code>.</li>
       <li>🔹 <strong>Final class</strong> - tidak bisa di-extends atau di-implement dari luar library. Berguna untuk kelas yang ingin di tutup.</li>
-      <li>🔹 <strong>Best practices</strong> - Gunakan<code>Sealed</code> untuk state atau result terbatas, <code>base</code> untuk framework,<code>final</code> untuk utylity class.</li>
+      <li>🔹 <strong>Best practices</strong> - Gunakan <code>Sealed</code> untuk state atau result terbatas, <code>base</code> untuk framework, <code>final</code> untuk utility class.</li>
     </ul>
   </div>
 
@@ -231,13 +279,14 @@
     <p>Abstract class: tidak bisa diinstansiasi, bisa punya method abstract/concrete</p>
     <p>Interface: implicit di Dart, gunakan implements</p>
     <p><strong>Contoh cepat:</strong></p>
-    <pre><code>abstract class Bentuk{
-      double hitungluas();
-    }
-    class Persegi implements Bentuk{
-      @override double hitungLuas() => sisi * sisi;
-    }
-</code></pre>
+    <pre><code>abstract class Bentuk {
+  double hitungLuas();
+}
+class Persegi implements Bentuk {
+  double sisi;
+  Persegi(this.sisi);
+  @override double hitungLuas() => sisi * sisi;
+}</code></pre>
   </div>
 
    <div class="card">
@@ -248,7 +297,7 @@
     <p>Tujuan multiple inheritance adalah menggabungkan berbagai perilaku/properti dalam satu objek tanpa duplikasi kode.</p>
   </div>
 
-   <!-- ========== Studi Kasus Burung dan Bebek ========== -->
+   <!-- Studi Kasus Burung dan Bebek -->
   <div class="card">
     <h2>Slide 3: Studi kasus: Burung dan bebek</h2>
     <div class="desc">Inheritance: extends keyword</div>
@@ -284,18 +333,16 @@ void main() {
     <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=ad7c1a26c40eb73b0b28f227dcc7d08a&run=true">Lihat Program</button>
   </div>
 
-  <!-- ========== Studi Kasus Mixin dengan State ========== -->
+  <!-- Mixin dengan State -->
   <div class="card">
-    <h2>Slide 4 Studi Kasus ixin Mixin dengan State</h2>
-    <div class="desc">Referensi parent bisa menampung objek child. Method yang dipanggil sesuai objek asli (runtime).</div>
+    <h2>Slide 4: Mixin dengan State</h2>
     <pre><code>//Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
 //Kelas: SI2A
 
-// Mixin dengan Properti (Opsional)
 mixin CanFly {
-  bool _isFlying = false; // Properti (private)
-  bool get isFlying => _isFlying; // Getter
+  bool _isFlying = false;
+  bool get isFlying => _isFlying;
   void fly() {
     if (!_isFlying) {
       _isFlying = true;
@@ -304,7 +351,6 @@ mixin CanFly {
       print('Already flying!');
     }
   }
-
   void land() {
     if (_isFlying) {
       _isFlying = false;
@@ -315,8 +361,8 @@ mixin CanFly {
   }
 }
 mixin CanSwim {
-  bool _isSwimming = false; // Properti (private)
-  bool get isSwimming => _isSwimming; // Getter
+  bool _isSwimming = false;
+  bool get isSwimming => _isSwimming;
   void swim() {
     if (!_isSwimming) {
       _isSwimming = true;
@@ -325,7 +371,6 @@ mixin CanSwim {
       print('Already swimming!');
     }
   }
-
   void stopSwim() {
     if (_isSwimming) {
       _isSwimming = false;
@@ -336,72 +381,42 @@ mixin CanSwim {
   }
 }
 
-// Class
 class Bird with CanFly {}
-
 class Duck extends Bird with CanSwim {}
-
 class Fish with CanSwim {}
-
 class Airplane with CanFly {}
 
-
 void main() {
-  // Bird
   Bird bird = Bird();
-  bird.fly(); // Output: Started flying!
-  bird.fly(); // Output: Already flying!
-  bird.land(); // Output: Landed!
-  bird.land(); // Output : Already on the ground!
-  print(
-    'Is Bird flying? : ${bird.isFlying}',
-  ); // Output: Is Bird flying? : false
+  bird.fly(); bird.fly(); bird.land(); bird.land();
+  print('Is Bird flying? : ${bird.isFlying}');
   print('----------------');
-  // Duck
   Duck duck = Duck();
-  duck.fly(); // Output: Started flying!
-  duck.swim(); // Output : Started swimming!
-  duck.swim(); // Output: Already swimming!
-  duck.stopSwim(); // Output: Stop swimming!
-  duck.stopSwim(); // Output: Already on stop swimming!
-  print(
-    'Is Duck swimming? : ${duck.isSwimming}',
-  ); // Output: Is Duck swimming? : false
+  duck.fly(); duck.swim(); duck.swim(); duck.stopSwim(); duck.stopSwim();
+  print('Is Duck swimming? : ${duck.isSwimming}');
   print('----------------');
-  // Fish
   Fish fish = Fish();
-  fish.swim();
-  fish.stopSwim();
-  print(
-    'Is Fish Swimming? : ${fish.isSwimming}',
-  ); // Output: Is Fish Swimming? : false
+  fish.swim(); fish.stopSwim();
+  print('Is Fish Swimming? : ${fish.isSwimming}');
   print('----------------');
-  // Airplane
   Airplane airplane = Airplane();
-  airplane.fly();
-  airplane.land();
+  airplane.fly(); airplane.land();
 }
 </code></pre>
     <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=94bb040b8b174a52ad67fd21449b0bad&run=true">Lihat Program</button>
   </div>
 
     <div class="card">
-    <h2>Slide 5 Pengantar Class Modifiers</h2>
-    <p> <strong>apa itu?</strong>:Keyword untuk mengontrol bagaimana class dapat digunakan Tujuan:</p>
-    <p><strong>tujuan:</strong></p>
-      <p>i. Kontrol inheritance/implementasi</p>
-      <p>ii. Jaminan keamanan tipe</p>
-      <p>iii. Desain API yang lebih ekspresif</p>
-    <p><strong>macam-macam</strong>: sealed , base , final , interface (Dart 3.0+)</p>
+    <h2>Slide 5: Pengantar Class Modifiers</h2>
+    <p><strong>Apa itu?</strong> Keyword untuk mengontrol bagaimana class dapat digunakan.</p>
+    <p><strong>Tujuan:</strong> Kontrol inheritance/implementasi, jaminan keamanan tipe, desain API yang lebih ekspresif.</p>
+    <p><strong>Macam-macam:</strong> sealed, base, final, interface (Dart 3.0+)</p>
   </div>
 
-
+  <!-- SEALED CLASS -->
   <div class="card">
-    <h2>Slide 6 Sealed class</h2>
-    <p><strong>Fitur</strong></p>
-    <p>Tidak bisa id-ectend atau di-implement dar luar library</p>
-    <p>Membatasi hierarki tipe yang diketahui saat compile-time</p>
-    <p>Perfect untuk pattern matching</p>
+    <h2>Slide 6: Sealed class</h2>
+    <p><strong>Fitur:</strong> Tidak bisa di-extend atau di-implement dari luar library. Membatasi hierarki tipe yang diketahui saat compile-time. Perfect untuk pattern matching.</p>
     <pre><code>
 //Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
@@ -410,12 +425,10 @@ void main() {
 sealed class ApiResponse {
   const ApiResponse();
 }
-// ================= SUCCESS =================
 class Success extends ApiResponse {
   final String message;
   const Success(this.message);
 }
-// ================= ERROR =================
 class ErrorResponse extends ApiResponse {
   final String errorMessage;
   const ErrorResponse(this.errorMessage);
@@ -427,20 +440,15 @@ void handle(ApiResponse response) {
     print("Error: ${response.errorMessage}");
   }
 }
-
 void main() {
   handle(const Success("Data berhasil"));
   handle(const ErrorResponse("Terjadi kesalahan"));
 }</code></pre>
-   <button class="btn-run" data-img="n1.png">Capture</button>
+   <button class="btn-run capture-sim" data-sim="sealed-basic">📺 Lihat Output</button>
   </div>
   
   <div class="card">
-    <h2>Slide 7 Keuntungan Sealed class</h2>
-    <p><strong>Keuntungan</strong></p>
-    <p>Exhaustive checking: Compiler tahu semua kemungkinan subclass</p>
-    <p>Pattern matching: Switch case yang aman</p>
-    <p>Documentation: Jelas hierarki terbatas</p>
+    <h2>Slide 7: Keuntungan Sealed class (Pattern Matching)</h2>
     <pre><code>//Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
 //Kelas: SI2A
@@ -468,22 +476,17 @@ class Error extends ApiResponse {
   final String errorMessage;
   Error(this.errorMessage);
 }</code></pre>
-<button class="btn-run" data-img="n2.png">Capture</button>
+<button class="btn-run capture-sim" data-sim="sealed-switch">📺 Lihat Output</button>
     </div>
 
   <div class="card">
-    <h2>Slide 8  Base class</h2>
-    <p><strong>Fitur:</strong>
-    <p>Bisa di-extend, tapi tidak bisa di-implement</p>
-    <p>Memastikan pewarisan dengan extends , bukan implements</p>
-    <p>Berguna untuk library yang ingin mengontrol inheritance</p>
+    <h2>Slide 8: Base class</h2>
+    <p><strong>Fitur:</strong> Bisa di-extend, tapi tidak bisa di-implement. Memastikan pewarisan dengan extends, bukan implements.</p>
     <pre><code>
 //Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
 //Kelas: SI2A
 
-// libbase.dart
-// 1. Definisi Base Class
 base class Animal {
   void speak() {
     print("Hewan bersuara...");
@@ -501,15 +504,12 @@ void main() {
   Animal myDog = Dog();
   myDog.speak(); // Output: woof woff!
 }</code></pre>
-    <button class="btn-run" data-img="n3.png">Capture</button>
+    <button class="btn-run capture-sim" data-sim="base-dog">📺 Lihat Output</button>
 </div>
 
 <div class="card">
-    <h2>Slide 9 kapan menggunakan  Base class</h2>
-    <p>saat ingin membuat hierarki yang hanya bisa di-extend</p>
-    <P>saat ingin menjaga struktur class tetap konsisten</P>
-    <p>saat ingin Mencegah implements yang tidak sesuai</p>
-    <p>saat membutuhkan kontrol penuh pada class turunan</p>
+    <h2>Slide 9: Kapan menggunakan Base class</h2>
+    <p>Saat ingin membuat hierarki yang hanya bisa di-extend, menjaga struktur class konsisten, mencegah implements yang tidak sesuai.</p>
     <pre><code>
 //Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
@@ -532,41 +532,30 @@ void main() {
   Animal animal = Dog();
   animal.speak(); // Woof!
 }</code></pre>
-     <button class="btn-run" data-img="n4.png">Capture</button>
+     <button class="btn-run capture-sim" data-sim="base-woof">📺 Lihat Output</button>
 </div>
 
-     <!-- ========== SLIDE 10 Final Class ========== -->
+     <!-- Final Class -->
   <div class="card">
-    <h2>Slide 10 Final Class</h2>
-   <p><strong>Fitur:</strong></p>
-<p>Bisa di-extend, tapi tidak bisa di-implement</p>
-<p>Memastikan pewarisan dengan extends , bukan implements</p>
-<p>Berguna untuk library yang ingin mengontrol inheritance</p>
+    <h2>Slide 10: Final Class</h2>
+   <p><strong>Fitur:</strong> Tidak bisa di-extends atau di-implements di luar library. Berguna untuk kelas yang ingin ditutup.</p>
 <pre><code>//Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
 //Kelas: SI2A
 
-// libfinal.dart + testfinal.dart (digabung)
-
 final class Settings {
   final String theme;
   final int fontSize;
-
   Settings({required this.theme, required this.fontSize});
-
   void showSettings() {
     print("Theme: $theme, Font Size: $fontSize");
   }
 }
 
-// ❌ Tidak boleh extends Settings karena final
-// jadi kita pakai class biasa yang berdiri sendiri
 class CustomSettings {
   final Settings settings;
-
   CustomSettings(String theme, int fontSize)
       : settings = Settings(theme: theme, fontSize: fontSize);
-
   void showSettings() {
     settings.showSettings();
   }
@@ -575,243 +564,97 @@ class CustomSettings {
 void main() {
   Settings settings = Settings(theme: "Dark", fontSize: 14);
   settings.showSettings();
-
   CustomSettings custom = CustomSettings("Dark", 14);
   custom.showSettings();
 }</code></pre>
-   <button class="btn-run" data-img="n5.png">Capture</button>
+   <button class="btn-run capture-sim" data-sim="final-class">📺 Lihat Output</button>
   </div>
   
   <div class="card">
-    <h2>Slide 11 Perbedaan Class Modifiers</h2>
-    <p> <strong>Sealed:</strong> Hanya bisa di-extend di dalam file yang sama; tidak bisa di-extend atau di-implement di luar library.</p>
-<p><strong>base:</strong> Bisa di-extend di luar library, tetapi tidak bisa di-implement (hanya mendukung pewarisan).</p>
-<p><strong>final:</strong> Bisa di-extend atau di-implement di dalam file yang sama, namun keduanya dilarang dilakukan di luar library.</p>
-<p><strong>default:</strong>Tidak memiliki batasan; bebas untuk di-extend maupun di-implement baik di dalam maupun di luar library.</p>
+    <h2>Slide 11: Perbedaan Class Modifiers</h2>
+    <p><strong>Sealed:</strong> Hanya bisa di-extend di dalam file yang sama; tidak bisa di-extend atau di-implement di luar library.</p>
+    <p><strong>base:</strong> Bisa di-extend di luar library, tetapi tidak bisa di-implement (hanya mendukung pewarisan).</p>
+    <p><strong>final:</strong> Bisa di-extend atau di-implement di dalam file yang sama, namun keduanya dilarang dilakukan di luar library.</p>
+    <p><strong>default:</strong> Tidak memiliki batasan; bebas untuk di-extend maupun di-implement baik di dalam maupun di luar library.</p>
   </div>
 
   <div class="card">
-    <h2>Slide 12 P: Praktik 1-Sealed class dengan pattern matching</h2>
-    <p>Sealed class memungkinkan semua subclass diketahui dalam satu file
-       sehingga dengan pattern matching setiap kondisi bisa diperiksa dan 
-      ditangani dengan jelas.</p>
+    <h2>Slide 12: Praktik 1 - Sealed class dengan pattern matching</h2>
     <pre><code>//Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
 //Kelas: SI2A
 
-sealed class Status {
-  const Status();
-}
-
-class Loading extends Status {
-  const Loading();
-}
-
-class Loaded extends Status {
-  final String data;
-  const Loaded(this.data);
-}
-
-class Failed extends Status {
-  final String error;
-  const Failed(this.error);
-}
+sealed class Status { const Status(); }
+class Loading extends Status { const Loading(); }
+class Loaded extends Status { final String data; const Loaded(this.data); }
+class Failed extends Status { final String error; const Failed(this.error); }
 
 void handleStatus(Status status) {
   switch (status) {
-    case Loading():
-      print('Loading...');
-    case Loaded(:final data):
-      print('Data: $data');
-    case Failed(:final error):
-      print('Error: $error');
+    case Loading(): print('Loading...');
+    case Loaded(:final data): print('Data: $data');
+    case Failed(:final error): print('Error: $error');
   }
 }
 
 void main() {
-  print('=' * 60);
-  print('DEMONSTRASI SEALED CLASS + PATTERN MATCHING');
-  print('=' * 60);
-
-  // Simulasi berbagai state
-  final states = <Status>[
-    Loading(),
-    Loaded('Koneksi gagal'),
-    Failed('Data tidak ditemukan'),
-  ];
-
-  for (int i = 0; i < states.length; i++) {
-    print('\n[${i + 1}] State: ${states[i].runtimeType}');
-    print('-' * 60);
-    handleStatus(states[i]);
-  }
-
-  print('\n' + '=' * 60);
-  print('KEUNGGULAN SEALED CLASS:');
-  print('=' * 60);
-  print('✅ Exhaustive switch: Compiler memastikan semua kasus tertangani');
-  print('✅ Type-safe: Tidak ada runtime errors karena missing case');
-  print('✅ Pattern matching: Destructuring field langsung di switch');
-  print('✅ Clear hierarchy: Hanya subclass yang didefinisikan yang bisa extend');
-  print('=' * 60);
-}
-
-</code></pre>
-    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=d05d089025107db7485db42ff93128de&run=true">Lihat Program</button>
+  handleStatus(Loading());
+  handleStatus(Loaded('Koneksi gagal'));
+  handleStatus(Failed('Data tidak ditemukan'));
+}</code></pre>
+    <button class="btn-run capture-sim" data-sim="pattern-matching-demo">📺 Lihat Output</button>
   </div>
 
   <div class="card">
-    <h2>Slide 13: Studi Kasus: Sistem State Management</h2>
-    <p>State Management adalah cara mengatur kondisi aplikasi (loading, success, error) dengan sealed class agar tiap state jelas.</p>
-
-    <p><strong>Fitur:</strong></p>
-
-    <p>Mengelola kondisi & alur program</p>
-
-    <p><strong>Kenapa digunakan:</strong></p>
-    <p>Lebih terstruktur dan Mencegah error tidak ter-handle</p>
-
-    <p><strong>Batasan:</strong></p>
-
-    <p>Bisa jadi kompleks jika state terlalu banyak</p>
+    <h2>Slide 13: Studi Kasus - Sistem State Management</h2>
     <pre><code>//Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
 //Kelas: SI2A
 
 sealed class AppState {}
-
 class LoadingState extends AppState {}
+class SuccessState extends AppState { final List<String> items; SuccessState(this.items); }
+class ErrorState extends AppState { final String message; ErrorState(this.message); }
 
-class SuccessState extends AppState {
-  final List<String> items;
-  SuccessState(this.items);
-}
-
-class ErrorState extends AppState {
-  final String message;
-  ErrorState(this.message);
-}
-
-// Handler yang aman dengan exhaustive switch
 void updateUI(AppState state) {
   switch (state) {
-    case LoadingState():
-      showLoading();
-      break;
-
-    case SuccessState(:final items):
-      showItems(items);
-      break;
-
-    case ErrorState(:final message):
-      showError(message);
-      break;
+    case LoadingState(): print('⏳ Loading...');
+    case SuccessState(:final items): print('✅ Success! Items: $items');
+    case ErrorState(:final message): print('❌ Error: $message');
   }
-}
-
-void showLoading() {
-  print('⏳ Loading...');
-}
-
-void showItems(List<String> items) {
-  print('✅ Success! Items:');
-  for (int i = 0; i < items.length; i++) {
-    print('   ${i + 1}. ${items[i]}');
-  }
-}
-
-void showError(String message) {
-  print('❌ Error: $message');
 }
 
 void main() {
-  print('=' * 60);
-  print('DEMONSTRASI SEALED CLASS + PATTERN MATCHING');
-  print('=' * 60);
-
-  final states = <AppState>[
-    LoadingState(),
-    SuccessState(['Item 1', 'Item 2', 'Item 3']),
-    ErrorState('Koneksi gagal'),
-    SuccessState(['Dart', 'Flutter', 'Pattern Matching']),
-    ErrorState('Data tidak ditemukan'),
-  ];
-
-  for (int i = 0; i < states.length; i++) {
-    print('\n[${i + 1}] State: ${states[i].runtimeType}');
-    print('-' * 60);
-    updateUI(states[i]);
-  }
-
-  print('\n' + '=' * 60);
-  print('KEUNGGULAN SEALED CLASS:');
-  print('=' * 60);
-  print('✅ Exhaustive switch');
-  print('✅ Type-safe');
-  print('✅ Pattern matching');
-  print('✅ Clear hierarchy');
-  print('=' * 60);
-}
-</code></pre>
-    <button class="btn-run" data-src="https://dartpad.dev/embed-dart.html?id=7903e7bad7a82eae7184589c1f7ff30a&run=true">Lihat Program</button>
+  updateUI(LoadingState());
+  updateUI(SuccessState(['Dart', 'Flutter']));
+  updateUI(ErrorState('Koneksi gagal'));
+}</code></pre>
+    <button class="btn-run capture-sim" data-sim="state-management">📺 Lihat Output</button>
   </div>
 
   <div class="card">
-    <h2>Ringkasan</h2>
-    <p>Ringkasan</p>
+    <h2>Ringkasan & Quick Guide</h2>
     <p>Sealed: Hierarki tertutup & aman untuk pattern matching.</p>
-    <p>Base: Hanya bisa di-extend (tutup akses implement).
+    <p>Base: Hanya bisa di-extend (tutup akses implement).</p>
     <p>Final: Segel total (tidak bisa di-extend atau di-implement).</p>
-    <p>Quick Guide:</p>
-    <p>Sealed: rightarrow Untuk State atau Result terbatas.</p>
-    <p>Base: rightarrow Untuk Framework atau Base Class.</p>
-    <p>Final: rightarrow Untuk Utility atau Constant Class.</p>
+    <p>🔹 Sealed → State atau Result terbatas. 🔹 Base → Framework / Base Class. 🔹 Final → Utility / Constant Class.</p>
   </div>
 
   <div class="card">
-    <h2>Bonus base Class Repository</h2>
-    <div class="desc"></div>
-    <p>Repository menggunakan base class agar hanya bisa diwariskan dengan extends, bukan diimplementasikan sembarangan.</p>
-
-    <p><strong>Tujuan:</strong></p>
-
-    <p>Mencegah implementasi yang tidak sesuai</p>
-    <p>Menjaga aturan penggunaan class tetap terkontrol</p>
-
-    <p><strong>Ciri utama:</strong></p>
-
-    <p>Hanya bisa di-extends</p>
-    <p>Tidak bisa di-implements di luar library</p>
-    <p>truktur method (CRUD) tetap konsisten</p>
-
-    <p>ntinya: base class dipakai untuk menjaga konsistensi CRUD dan memastikan hanya class turunan yang mengikuti aturan yang bisa digunakan.</p>
+    <h2>Bonus: Base Class Repository</h2>
     <pre><code>//Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
 //Kelas: SI2A
 
 base class Repository {
-  void create(String data) {
-    print("Create: $data");
-  }
-
-  void read() {
-    print("Read data");
-  }
-
-  void update(int id, String data) {
-    print("Update id=$id: $data");
-  }
-
-  void delete(int id) {
-    print("Delete id=$id");
-  }
+  void create(String data) => print("Create: $data");
+  void read() => print("Read data");
+  void update(int id, String data) => print("Update id=$id: $data");
+  void delete(int id) => print("Delete id=$id");
 }
 
 base class UserRepository extends Repository {
-  @override
-  void read() {
-    print("Menampilkan semua user");
-  }
+  @override void read() => print("Menampilkan semua user");
 }
 
 void main() {
@@ -822,57 +665,22 @@ void main() {
   repo.delete(2);
 }
 </code></pre>
-     <button class="btn-run" data-img="4.png">Capture</button>
+     <button class="btn-run capture-sim" data-sim="base-repo">📺 Lihat Output</button>
   </div>
 
   <div class="card">
-    <h2>Bonus Final Class Mathutils</h2>
-    <div class="desc"></div>
-    <p>MathUtils menggunakan final class karena hanya berisi fungsi utilitas (biasanya static) dan tidak perlu diwariskan.</p>
-
-    <p><strong>Tujuan:</strong></p>
-
-    <p>Mencegah class di-extend atau diimplementasikan</p>
-    <p>Menjaga fungsi tetap aman, stabil, dan tidak diubah subclass</p>
-
-
-    <p><strong>Ciri utama:</strong></p>
-
-    <p>Tidak bisa diwariskan</p>
-    <p>Cocok untuk method static</p>
-
-    <p>Kesimpulan: final class dipakai agar MathUtils tetap sederhana, aman, dan tidak bisa dimodifikasi oleh class lain.</p>
+    <h2>Bonus: Final Class MathUtils</h2>
     <pre><code>// Nama: Ratu Klarisa Rahadianti
 // NIM: 251410010
 // Kelas: SI2A
 
-// ================= Final Class MathUtils =================
 final class MathUtils {
-  // Penjumlahan
-  static int tambah(int a, int b) {
-    return a + b;
-  }
-
-  // Pengurangan
-  static int kurang(int a, int b) {
-    return a - b;
-  }
-
-  // Perkalian
-  static int kali(int a, int b) {
-    return a * b;
-  }
-
-  // Pembagian
-  static double bagi(int a, int b) {
-    if (b == 0) {
-      throw Exception("Tidak bisa dibagi dengan nol");
-    }
-    return a / b;
-  }
+  static int tambah(int a, int b) => a + b;
+  static int kurang(int a, int b) => a - b;
+  static int kali(int a, int b) => a * b;
+  static double bagi(int a, int b) => a / b;
 }
 
-// ================= MAIN =================
 void main() {
   print("Tambah: ${MathUtils.tambah(10, 5)}");
   print("Kurang: ${MathUtils.kurang(10, 5)}");
@@ -880,7 +688,7 @@ void main() {
   print("Bagi: ${MathUtils.bagi(10, 5)}");
 }
 </code></pre>
-    <button class="btn-run" data-img="5.png">Capture</button>
+    <button class="btn-run capture-sim" data-sim="math-utils">📺 Lihat Output</button>
   </div>
 
 <footer>
@@ -888,94 +696,144 @@ void main() {
   <p>Ratu Klarisa Rahadianti — 251410010 — SI2A</p>
 </footer>
 
+<!-- MODAL UNTUK OUTPUT SIMULASI / DARTPAD -->
 <div id="codeModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <h3 id="modalTitle">DartPad Runner</h3>
+      <h3 id="modalTitle">Output Program</h3>
       <span class="close" id="closeModalBtn">&times;</span>
     </div>
-    <div class="modal-body">
-      <iframe id="dartpadIframe" title="DartPad" src="about:blank"></iframe>
+    <div class="modal-body" id="modalBody">
+      <!-- konten dinamis: bisa iframe atau div output -->
     </div>
   </div>
 </div>
 
 <script>
+  // Mapping untuk simulasi output program (capture)
+  const outputSimulation = {
+    "sealed-basic": `=== OUTPUT SEALED CLASS ===
+Success: Data berhasil
+Error: Terjadi kesalahan`,
+    "sealed-switch": `=== OUTPUT SWITCH + SEALED ===
+Success: Data berhasil
+Error: Terjadi kesalahan`,
+    "base-dog": `=== OUTPUT BASE CLASS (Dog) ===
+woof woff!`,
+    "base-woof": `=== OUTPUT BASE CLASS ===
+Woof!`,
+    "final-class": `=== OUTPUT FINAL CLASS ===
+Theme: Dark, Font Size: 14
+Theme: Dark, Font Size: 14`,
+    "pattern-matching-demo": `=== SEALED + PATTERN MATCHING ===
+Loading...
+Data: Koneksi gagal
+Error: Data tidak ditemukan`,
+    "state-management": `=== STATE MANAGEMENT (SEALED) ===
+⏳ Loading...
+✅ Success! Items: [Dart, Flutter]
+❌ Error: Koneksi gagal`,
+    "base-repo": `=== BASE CLASS REPOSITORY ===
+Create: User A
+Menampilkan semua user
+Update id=1: User B
+Delete id=2`,
+    "math-utils": `=== FINAL CLASS MATHUTILS ===
+Tambah: 15
+Kurang: 5
+Kali: 50
+Bagi: 2.0`
+  };
+
   const modal = document.getElementById('codeModal');
-  const modalIframe = document.getElementById('dartpadIframe');
+  const modalBody = document.getElementById('modalBody');
+  const modalTitleElem = document.getElementById('modalTitle');
   const closeBtn = document.getElementById('closeModalBtn');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalBody = document.querySelector(".modal-body");
+  let currentIframe = null;
 
-  // =======================
-  // OPEN DARTPAD
-  // =======================
-  function openDartPad(embedUrl, programTitle) {
-    modalBody.innerHTML = "";
-    modalBody.appendChild(modalIframe);
-    modalIframe.style.display = "block";
+  // Fungsi bersihkan modal body
+  function clearModalBody() {
+    while (modalBody.firstChild) {
+      modalBody.removeChild(modalBody.firstChild);
+    }
+  }
 
-    modalIframe.src = embedUrl;
-    modalTitle.innerText = programTitle;
+  // Tampilkan output simulasi (teks)
+  function showSimulatedOutput(simKey, title) {
+    clearModalBody();
+    const text = outputSimulation[simKey] || "// Output tidak tersedia untuk demo ini";
+    const pre = document.createElement('pre');
+    pre.className = 'output-console';
+    pre.style.whiteSpace = 'pre-wrap';
+    pre.style.fontFamily = "'Fira Code', monospace";
+    pre.style.background = '#0a0f1c';
+    pre.style.padding = '1.2rem';
+    pre.style.borderRadius = '1rem';
+    pre.style.color = '#bbf0ff';
+    pre.innerText = text;
+    modalBody.appendChild(pre);
+    modalTitleElem.innerText = title || "Hasil Output Program";
     modal.style.display = 'flex';
   }
 
-  // =======================
-  // CAPTURE IMAGE
-  // =======================
-  function capture(imgFile) {
-    modalBody.innerHTML = "";
-
-    const img = document.createElement("img");
-    img.src = imgFile;
-    img.style.width = "100%";
-    img.style.height = "100%";
-    img.style.objectFit = "contain";
-
-    modalBody.appendChild(img);
-
-    modalTitle.innerText = "Hasil Capture";
+  // Tampilkan DartPad (iframe)
+  function showDartPad(embedUrl, programTitle) {
+    clearModalBody();
+    const iframe = document.createElement('iframe');
+    iframe.src = embedUrl;
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = 'none';
+    iframe.style.borderRadius = '0.75rem';
+    iframe.style.background = '#fff';
+    iframe.title = "DartPad";
+    modalBody.appendChild(iframe);
+    modalTitleElem.innerText = programTitle || "DartPad Runner";
     modal.style.display = 'flex';
   }
 
-  // =======================
-  // DETECT BUTTON TYPE
-  // =======================
+  // Event listener untuk semua tombol
   document.querySelectorAll('.btn-run').forEach(btn => {
-    btn.addEventListener('click', () => {
-
-      const img = btn.getAttribute('data-img');
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
       const src = btn.getAttribute('data-src');
+      const sim = btn.getAttribute('data-sim');
       const card = btn.closest('.card');
-      const programName = card?.querySelector('h2')?.innerText || 'Program Dart';
+      let programName = card?.querySelector('h2')?.innerText || 'Program Dart';
 
-      // 👉 JIKA ADA GAMBAR = CAPTURE
-      if (img) {
-        capture(img);
+      // Jika punya simulasi output (capture)
+      if (sim && outputSimulation[sim]) {
+        showSimulatedOutput(sim, programName);
         return;
       }
-
-      // 👉 JIKA ADA DARTPAD = RUN
+      
+      // Jika punta DartPad link
       if (src) {
-        openDartPad(src, programName);
+        showDartPad(src, programName);
         return;
       }
 
+      // fallback jika tidak ada keduanya
+      clearModalBody();
+      const warning = document.createElement('div');
+      warning.className = 'output-console';
+      warning.innerText = 'Tidak ada pratinjau untuk demo ini. Silakan lihat cuplikan kode di atas.';
+      modalBody.appendChild(warning);
+      modalTitleElem.innerText = 'Informasi';
+      modal.style.display = 'flex';
     });
   });
 
-  // =======================
-  // CLOSE MODAL
-  // =======================
+  // Tutup modal
   closeBtn.addEventListener('click', () => {
     modal.style.display = 'none';
-    modalIframe.src = 'about:blank';
+    clearModalBody();
   });
 
   window.addEventListener('click', (e) => {
     if (e.target === modal) {
       modal.style.display = 'none';
-      modalIframe.src = 'about:blank';
+      clearModalBody();
     }
   });
 </script>
