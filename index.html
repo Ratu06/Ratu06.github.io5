@@ -528,6 +528,9 @@ void main() {
 <div class="card">
     <h2>Slide 9 kapan menggunakan  Base class</h2>
     <p>saat ingin membuat hierarki yang hanya bisa di-extend</p>
+    <P>saat ingin menjaga struktur class tetap konsisten</P>
+    <p>saat ingin Mencegah implements yang tidak sesuai</p>
+    <p>saat membutuhkan kontrol penuh pada class turunan</p>
     <pre><code>
 //Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
@@ -623,6 +626,9 @@ void main() {
 
   <div class="card">
     <h2>Slide 12 P: Praktik 1-Sealed class dengan pattern matching</h2>
+    <p>Sealed class memungkinkan semua subclass diketahui dalam satu file
+       sehingga dengan pattern matching setiap kondisi bisa diperiksa dan 
+      ditangani dengan jelas.</p>
     <pre><code>//Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
 //Kelas: SI2A
@@ -690,6 +696,18 @@ void main() {
 
   <div class="card">
     <h2>Slide 13: Studi Kasus: Sistem State Management</h2>
+    <p>State Management adalah cara mengatur kondisi aplikasi (loading, success, error) dengan sealed class agar tiap state jelas.</p>
+
+    <p><strong>Fitur:</strong></p>
+
+    <p>Mengelola kondisi & alur program</p>
+
+    <p><strong>Kenapa digunakan:</strong></p>
+    <p>Lebih terstruktur dan Mencegah error tidak ter-handle</p>
+
+    <p><strong>Batasan:</strong></p>
+
+    <p>Bisa jadi kompleks jika state terlalu banyak</p>
     <pre><code>//Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
 //Kelas: SI2A
@@ -787,33 +805,82 @@ void main() {
   <div class="card">
     <h2>Bonus Class Repository</h2>
     <div class="desc"></div>
+    <p>Repository menggunakan base class agar hanya bisa diwariskan dengan extends, bukan diimplementasikan sembarangan.</p>
+
+    <p><strong>Tujuan:</strong></p>
+
+    <p>Mencegah implementasi yang tidak sesuai</p>
+    <p>Menjaga aturan penggunaan class tetap terkontrol</p>
+
+    <p><strong>Ciri utama:</strong></p>
+
+    <p>Hanya bisa di-extends</p>
+    <p>Tidak bisa di-implements di luar library</p>
+    <p>truktur method (CRUD) tetap konsisten</p>
+
+    <p>ntinya: base class dipakai untuk menjaga konsistensi CRUD dan memastikan hanya class turunan yang mengikuti aturan yang bisa digunakan.</p>
     <pre><code>//Nama: Ratu Klarisa Rahadianti
-//Nim: 251410010
-//Kelas: SI2A
+// NIM: 251410010
+// Kelas: SI2A
 
+// ================= Base Class Repository =================
 abstract class Repository<T> {
-  void create(T d);
+  void create(T data);
   List<T> read();
-  void update(int i, T d);
-  void delete(int i);
+  void update(int index, T data);
+  void delete(int index);
 }
 
+// ================= Implementasi Repository =================
 class DataRepository<T> extends Repository<T> {
-  final _d = <T>[];
+  final List<T> _data = [];
 
-  void create(T d) => _d.add(d);
-  List<T> read() => _d;
-  void update(int i, T d) => _d[i] = d;
-  void delete(int i) => _d.removeAt(i);
+  @override
+  void create(T data) {
+    _data.add(data);
+    print('Data ditambahkan: $data');
+  }
+
+  @override
+  List<T> read() {
+    return _data;
+  }
+
+  @override
+  void update(int index, T data) {
+    if (index >= 0 && index < _data.length) {
+      _data[index] = data;
+      print('Data diupdate di index $index menjadi $data');
+    } else {
+      print('Index tidak valid');
+    }
+  }
+
+  @override
+  void delete(int index) {
+    if (index >= 0 && index < _data.length) {
+      print('Data dihapus: ${_data[index]}');
+      _data.removeAt(index);
+    } else {
+      print('Index tidak valid');
+    }
+  }
 }
 
+// ================= MAIN =================
 void main() {
-  var r = DataRepository<String>();
-  r.create("Buku");
-  r.create("Pensil");
-  r.update(1, "Pulpen");
-  r.delete(0);
-  print(r.read());
+  var repo = DataRepository<String>();
+
+  repo.create("Buku");
+  repo.create("Pensil");
+
+  print("Data sekarang: ${repo.read()}");
+
+  repo.update(1, "Pulpen");
+  print("Setelah update: ${repo.read()}");
+
+  repo.delete(0);
+  print("Setelah delete: ${repo.read()}");
 }
 </code></pre>
      <button class="btn-run" onclick="capture('4.png')">Capture</button>
@@ -822,6 +889,20 @@ void main() {
   <div class="card">
     <h2>Bonus Final Class Mathutils</h2>
     <div class="desc"></div>
+    <p>MathUtils menggunakan final class karena hanya berisi fungsi utilitas (biasanya static) dan tidak perlu diwariskan.</p>
+
+    <p><strong>Tujuan:</strong></p>
+
+    <p>Mencegah class di-extend atau diimplementasikan</p>
+    <p>Menjaga fungsi tetap aman, stabil, dan tidak diubah subclass</p>
+
+
+    <p><strong>Ciri utama:</strong></p>
+
+    <p>Tidak bisa diwariskan</p>
+    <p>Cocok untuk method static</p>
+
+    <p>Kesimpulan: final class dipakai agar MathUtils tetap sederhana, aman, dan tidak bisa dimodifikasi oleh class lain.</p>
     <pre><code>// Nama: Ratu Klarisa Rahadianti
 // NIM: 251410010
 // Kelas: SI2A
