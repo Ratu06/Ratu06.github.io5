@@ -432,7 +432,7 @@ void main() {
   handle(const Success("Data berhasil"));
   handle(const ErrorResponse("Terjadi kesalahan"));
 }</code></pre>
-    <button class="btn-run" onclick="capture('n1.png')">Capture</button>
+   <button class="btn-run" data-img="n1.png">Capture</button>
   </div>
   
   <div class="card">
@@ -468,7 +468,7 @@ class Error extends ApiResponse {
   final String errorMessage;
   Error(this.errorMessage);
 }</code></pre>
-<button class="btn-run" onclick="capture('n2.png')">Capture</button>
+<button class="btn-run" data-img="n2.png">Capture</button>
     </div>
 
   <div class="card">
@@ -501,7 +501,7 @@ void main() {
   Animal myDog = Dog();
   myDog.speak(); // Output: woof woff!
 }</code></pre>
-     <button class="btn-run" onclick="capture('n3.png')">Capture</button>
+    <button class="btn-run" data-img="n3.png">Capture</button>
 </div>
 
 <div class="card">
@@ -532,7 +532,7 @@ void main() {
   Animal animal = Dog();
   animal.speak(); // Woof!
 }</code></pre>
-     <button class="btn-run" onclick="capture('n4.png')">Capture</button>
+     <button class="btn-run" data-img="n4.png">Capture</button>
 </div>
 
      <!-- ========== SLIDE 10 Final Class ========== -->
@@ -579,7 +579,7 @@ void main() {
   CustomSettings custom = CustomSettings("Dark", 14);
   custom.showSettings();
 }</code></pre>
-    <button class="btn-run" onclick="capture('n5.png')">Capture</button>
+   <button class="btn-run" data-img="n5.png">Capture</button>
   </div>
   
   <div class="card">
@@ -822,7 +822,7 @@ void main() {
   repo.delete(2);
 }
 </code></pre>
-     <button class="btn-run" onclick="capture('4.png')">Capture</button>
+     <button class="btn-run" data-img="4.png">Capture</button>
   </div>
 
   <div class="card">
@@ -880,7 +880,7 @@ void main() {
   print("Bagi: ${MathUtils.bagi(10, 5)}");
 }
 </code></pre>
-     <button class="btn-run" onclick="capture('5.png')">Capture</button>
+    <button class="btn-run" data-img="5.png">Capture</button>
   </div>
 
 <footer>
@@ -905,45 +905,68 @@ void main() {
   const modalIframe = document.getElementById('dartpadIframe');
   const closeBtn = document.getElementById('closeModalBtn');
   const modalTitle = document.getElementById('modalTitle');
+  const modalBody = document.querySelector(".modal-body");
 
+  // =======================
+  // OPEN DARTPAD
+  // =======================
   function openDartPad(embedUrl, programTitle) {
+    modalBody.innerHTML = "";
+    modalBody.appendChild(modalIframe);
+    modalIframe.style.display = "block";
+
     modalIframe.src = embedUrl;
     modalTitle.innerText = programTitle;
     modal.style.display = 'flex';
   }
 
-  function capture(namaFile) {
-  modal.style.display = 'flex';
-  modalTitle.innerText = "Hasil Output";
-  modalIframe.src = ""; // kosongkan iframe
+  // =======================
+  // CAPTURE IMAGE
+  // =======================
+  function capture(imgFile) {
+    modalBody.innerHTML = "";
 
-  modalIframe.style.display = "none";
+    const img = document.createElement("img");
+    img.src = imgFile;
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "contain";
 
-  let img = document.createElement("img");
-  img.src = namaFile;
-  img.style.width = "100%";
-  img.style.height = "100%";
-  img.style.objectFit = "contain";
+    modalBody.appendChild(img);
 
-  const body = document.querySelector(".modal-body");
-  body.innerHTML = "";
-  body.appendChild(img);
-}
+    modalTitle.innerText = "Hasil Capture";
+    modal.style.display = 'flex';
+  }
 
+  // =======================
+  // DETECT BUTTON TYPE
+  // =======================
   document.querySelectorAll('.btn-run').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const src = btn.getAttribute('data-src');
+    btn.addEventListener('click', () => {
 
-    // ❗ kalau bukan tombol DartPad, langsung keluar
-    if (!src) return;
+      const img = btn.getAttribute('data-img');
+      const src = btn.getAttribute('data-src');
+      const card = btn.closest('.card');
+      const programName = card?.querySelector('h2')?.innerText || 'Program Dart';
 
-    const card = btn.closest('.card');
-    const programName = card?.querySelector('h2')?.innerText || 'Program Dart';
+      // 👉 JIKA ADA GAMBAR = CAPTURE
+      if (img) {
+        capture(img);
+        return;
+      }
 
-    openDartPad(src, programName);
+      // 👉 JIKA ADA DARTPAD = RUN
+      if (src) {
+        openDartPad(src, programName);
+        return;
+      }
+
+    });
   });
-});
 
+  // =======================
+  // CLOSE MODAL
+  // =======================
   closeBtn.addEventListener('click', () => {
     modal.style.display = 'none';
     modalIframe.src = 'about:blank';
