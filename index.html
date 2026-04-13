@@ -140,7 +140,7 @@
       font-size: 0.85rem;
     }
 
-    /* ========== MODAL RESPONSIF UNTUK LAPTOP ========== */
+    /* modal */
     .modal {
       display: none;
       position: fixed;
@@ -148,7 +148,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.95);
+      background: rgba(0, 0, 0, 0.9);
       z-index: 2000;
       align-items: center;
       justify-content: center;
@@ -158,13 +158,11 @@
       background: #0f172a;
       width: 90%;
       max-width: 1100px;
-      max-height: 90vh;
-      height: auto;
+      height: 85%;
       border-radius: 1.5rem;
       display: flex;
       flex-direction: column;
       border: 1px solid #3b82f6;
-      overflow: hidden;
     }
 
     .modal-header {
@@ -195,34 +193,15 @@
 
     .modal-body {
       flex: 1;
-      padding: 1rem;
-      overflow-y: auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #0a0f1c;
+      padding: 0.5rem;
     }
 
     .modal-body iframe {
       width: 100%;
       height: 100%;
-      min-height: 400px;
       border: none;
-      border-radius: 0.75rem;
+      border-radius: 1rem;
       background: #fefefe;
-    }
-
-    /* Gambar capture akan responsif dan tidak overflow */
-    .modal-body img {
-      max-width: 100%;
-      max-height: 100%;
-      width: auto;
-      height: auto;
-      object-fit: contain;
-      border-radius: 0.5rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      display: block;
-      margin: auto;
     }
   </style>
 </head>
@@ -928,151 +907,75 @@ void main() {
   const modalTitle = document.getElementById('modalTitle');
   const modalBody = document.querySelector(".modal-body");
 
-  // ========== MEMBUAT GAMBAR DARI TEKS OUTPUT (agar selalu ada gambar) ==========
-  function textToImage(outputText, title) {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const fontSize = 16;
-    const fontFamily = "'Fira Code', 'Cascadia Code', monospace";
-    const lineHeight = 1.6;
-    const paddingX = 30;
-    const paddingY = 30;
-    const bgColor = '#0a0f1c';
-    const textColor = '#bbf0ff';
-    const borderColor = '#3b82f6';
-
-    ctx.font = `${fontSize}px ${fontFamily}`;
-    const lines = outputText.split('\n');
-    let maxWidth = 0;
-    for (let line of lines) {
-      const metrics = ctx.measureText(line);
-      maxWidth = Math.max(maxWidth, metrics.width);
-    }
-    const canvasWidth = Math.max(450, maxWidth + paddingX * 2);
-    const canvasHeight = Math.max(200, (lines.length * fontSize * lineHeight) + paddingY * 2 + 30);
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-
-    ctx.font = `${fontSize}px ${fontFamily}`;
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    ctx.strokeStyle = borderColor;
-    ctx.lineWidth = 2;
-    ctx.strokeRect(5, 5, canvasWidth - 10, canvasHeight - 10);
-
-    ctx.fillStyle = '#facc15';
-    ctx.font = `bold ${fontSize-2}px ${fontFamily}`;
-    ctx.fillText(`📟 ${title}`, paddingX, paddingY - 15);
-
-    ctx.fillStyle = textColor;
-    ctx.font = `${fontSize}px ${fontFamily}`;
-    ctx.textBaseline = 'top';
-    for (let i = 0; i < lines.length; i++) {
-      ctx.fillText(lines[i], paddingX, paddingY + i * fontSize * lineHeight);
-    }
-    return canvas.toDataURL('image/png');
-  }
-
-  // ========== OUTPUT UNTUK SETIAP CARD ==========
-  function getOutputForCard(cardTitle) {
-    if (cardTitle.includes("Slide 6 Sealed class")) {
-      return `=== SEALED CLASS DEMO ===\nSuccess: Data berhasil\nError: Terjadi kesalahan`;
-    }
-    if (cardTitle.includes("Slide 7 Keuntungan Sealed class")) {
-      return `=== SEALED CLASS + SWITCH ===\nSuccess: Data berhasil\nError: Terjadi kesalahan`;
-    }
-    if (cardTitle.includes("Slide 8  Base class")) {
-      return `=== BASE CLASS (Animal/Dog) ===\nwoof woff!`;
-    }
-    if (cardTitle.includes("Slide 9 kapan menggunakan  Base class")) {
-      return `=== BASE CLASS (Woof!) ===\nWoof!`;
-    }
-    if (cardTitle.includes("Slide 10 Final Class")) {
-      return `=== FINAL CLASS SETTINGS ===\nTheme: Dark, Font Size: 14\nTheme: Dark, Font Size: 14`;
-    }
-    if (cardTitle.includes("Bonus base Class Repository")) {
-      return `=== BASE CLASS REPOSITORY ===\nCreate: User A\nMenampilkan semua user\nUpdate id=1: User B\nDelete id=2`;
-    }
-    if (cardTitle.includes("Bonus Final Class Mathutils")) {
-      return `=== FINAL CLASS MATHUTILS ===\nTambah: 15\nKurang: 5\nKali: 50\nBagi: 2.0`;
-    }
-    return "// Tidak ada output simulasi.\n// Silakan jalankan kode di DartPad.";
-  }
-
-  // ========== MENAMPILKAN GAMBAR CAPTURE ==========
-  function showCaptureImage(cardTitle, programName) {
-    // Bersihkan modal body
-    while (modalBody.firstChild) {
-      modalBody.removeChild(modalBody.firstChild);
-    }
-    const output = getOutputForCard(cardTitle);
-    const imgData = textToImage(output, programName);
-    const img = document.createElement('img');
-    img.src = imgData;
-    img.style.maxWidth = '100%';
-    img.style.maxHeight = '100%';
-    img.style.width = 'auto';
-    img.style.height = 'auto';
-    img.style.objectFit = 'contain';
-    modalBody.appendChild(img);
-    modalTitle.innerText = `📸 Capture: ${programName}`;
-    modal.style.display = 'flex';
-  }
-
-  // ========== BUKA DARTPAD ==========
+  // =======================
+  // OPEN DARTPAD
+  // =======================
   function openDartPad(embedUrl, programTitle) {
-    while (modalBody.firstChild) {
-      modalBody.removeChild(modalBody.firstChild);
-    }
+    modalBody.innerHTML = "";
     modalBody.appendChild(modalIframe);
     modalIframe.style.display = "block";
+
     modalIframe.src = embedUrl;
     modalTitle.innerText = programTitle;
     modal.style.display = 'flex';
   }
 
-  // ========== EVENT UNTUK SEMUA TOMBOL ==========
+  // =======================
+  // CAPTURE IMAGE
+  // =======================
+  function capture(imgFile) {
+    modalBody.innerHTML = "";
+
+    const img = document.createElement("img");
+    img.src = imgFile;
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "contain";
+
+    modalBody.appendChild(img);
+
+    modalTitle.innerText = "Hasil Capture";
+    modal.style.display = 'flex';
+  }
+
+  // =======================
+  // DETECT BUTTON TYPE
+  // =======================
   document.querySelectorAll('.btn-run').forEach(btn => {
     btn.addEventListener('click', () => {
-      const imgAttr = btn.getAttribute('data-img');
-      const srcAttr = btn.getAttribute('data-src');
-      const card = btn.closest('.card');
-      const cardTitle = card?.querySelector('h2')?.innerText || '';
-      const programName = cardTitle || 'Program Dart';
 
-      // Jika tombol memiliki data-img (Capture)
-      if (imgAttr) {
-        showCaptureImage(cardTitle, programName);
+      const img = btn.getAttribute('data-img');
+      const src = btn.getAttribute('data-src');
+      const card = btn.closest('.card');
+      const programName = card?.querySelector('h2')?.innerText || 'Program Dart';
+
+      // 👉 JIKA ADA GAMBAR = CAPTURE
+      if (img) {
+        capture(img);
         return;
       }
-      // Jika tombol memiliki data-src (DartPad)
-      if (srcAttr) {
-        openDartPad(srcAttr, programName);
+
+      // 👉 JIKA ADA DARTPAD = RUN
+      if (src) {
+        openDartPad(src, programName);
         return;
       }
+
     });
   });
 
-  // ========== TUTUP MODAL ==========
+  // =======================
+  // CLOSE MODAL
+  // =======================
   closeBtn.addEventListener('click', () => {
     modal.style.display = 'none';
     modalIframe.src = 'about:blank';
-    while (modalBody.firstChild) {
-      modalBody.removeChild(modalBody.firstChild);
-    }
-    modalBody.appendChild(modalIframe);
-    modalIframe.style.display = "block";
   });
 
   window.addEventListener('click', (e) => {
     if (e.target === modal) {
       modal.style.display = 'none';
       modalIframe.src = 'about:blank';
-      while (modalBody.firstChild) {
-        modalBody.removeChild(modalBody.firstChild);
-      }
-      modalBody.appendChild(modalIframe);
-      modalIframe.style.display = "block";
     }
   });
 </script>
