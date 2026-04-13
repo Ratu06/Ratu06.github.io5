@@ -140,7 +140,7 @@
       font-size: 0.85rem;
     }
 
-    /* ========== MODAL DENGAN SCROLL, GAMBAR UKURAN ASLI TIDAK TERPOTONG ========== */
+    /* ========== MODAL RESPONSIF: GAMBAR TIDAK TERPOTONG ========== */
     .modal {
       display: none;
       position: fixed;
@@ -193,11 +193,10 @@
       color: white;
     }
 
-    /* modal-body: scroll otomatis, gambar ukuran asli */
     .modal-body {
       flex: 1;
       padding: 0;
-      overflow: auto;
+      overflow: auto;   /* scroll vertikal jika gambar tinggi */
       background: #0a0f1c;
       display: flex;
       justify-content: center;
@@ -213,19 +212,17 @@
       background: #fefefe;
     }
 
-    /* gambar ukuran asli, tidak diskalakan (agar tidak terpotong) */
+    /* GAMBAR RESPONSIF: lebar mengikuti modal, tinggi otomatis, tidak terpotong horizontal */
     .modal-body img {
+      max-width: 100%;
+      height: auto;
       display: block;
       margin: 0 auto;
-      max-width: none;
-      max-height: none;
-      width: auto;
-      height: auto;
     }
   </style>
 </head>
 <body>
-<!-- ========== SEMUA KONTEN CARD SAMA PERSIS SEPERTI ASLI (saya tidak ubah) ========== -->
+<!-- KONTEN CARD SAMA PERSIS SEPERTI ASLI (tidak diubah) -->
 <header>
   <h1>🧩 Multiple Inheritance & Class Modifiers</h1>
   <p class="subhead">Dart OOP — Sesi 5 | Mixin · Sealed · Base · Final</p>
@@ -306,7 +303,7 @@ void main() {
 
   <!-- Studi Kasus Mixin dengan State -->
   <div class="card">
-    <h2>Slide 4 Studi Kasus Mixin dengan State</h2>
+    <h2>Slide 4 Studi Kasus ixin Mixin dengan State</h2>
     <div class="desc">Referensi parent bisa menampung objek child. Method yang dipanggil sesuai objek asli (runtime).</div>
     <pre><code>//Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
