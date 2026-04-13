@@ -931,17 +931,18 @@ void main() {
 }
 
   document.querySelectorAll('.btn-run').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const src = btn.getAttribute('data-src');
-      const card = btn.closest('.card');
-      const programName = card?.querySelector('h2')?.innerText || 'Program Dart';
-      if (src) {
-        openDartPad(src, programName);
-      } else {
-        alert('URL tidak tersedia');
-      }
-    });
+  btn.addEventListener('click', () => {
+    const src = btn.getAttribute('data-src');
+
+    // ❗ kalau bukan tombol DartPad, langsung keluar
+    if (!src) return;
+
+    const card = btn.closest('.card');
+    const programName = card?.querySelector('h2')?.innerText || 'Program Dart';
+
+    openDartPad(src, programName);
   });
+});
 
   closeBtn.addEventListener('click', () => {
     modal.style.display = 'none';
