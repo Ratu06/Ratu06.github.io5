@@ -403,27 +403,21 @@ void main() {
     <p>Membatasi hierarki tipe yang diketahui saat compile-time</p>
     <p>Perfect untuk pattern matching</p>
     <pre><code>
-/Nama: Ratu Klarisa Rahadianti
+//Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
 //Kelas: SI2A
-
-// nama file: libsealed.dart
 
 sealed class ApiResponse {
   const ApiResponse();
 }
-
 // ================= SUCCESS =================
 class Success extends ApiResponse {
   final String message;
-
   const Success(this.message);
 }
-
 // ================= ERROR =================
 class ErrorResponse extends ApiResponse {
   final String errorMessage;
-
   const ErrorResponse(this.errorMessage);
 }
 void handle(ApiResponse response) {
@@ -456,38 +450,23 @@ void handleResponse(ApiResponse response) {
     case Success():
       print("Success: ${(response as Success).message}");
       break;
-
     case Error():
       print("Error: ${(response as Error).errorMessage}");
       break;
-
-    case Pending():
-      print("Pending: ${(response as Pending).message}");
-      break;
   }
 }
-
 void main() {
   handleResponse(Success("Data berhasil"));
   handleResponse(Error("Terjadi kesalahan"));
-  handleResponse(Pending("Sedang diproses"));
 }
-
 sealed class ApiResponse {}
-
 class Success extends ApiResponse {
   final String message;
   Success(this.message);
 }
-
 class Error extends ApiResponse {
   final String errorMessage;
   Error(this.errorMessage);
-}
-
-class Pending extends ApiResponse {
-  final String message;
-  Pending(this.message);
 }</code></pre>
 <button class="btn-run" onclick="capture('n2.png')">Capture</button>
     </div>
@@ -536,35 +515,22 @@ void main() {
 //Nim: 251410010
 //Kelas: SI2A
 
-class Animal {
+base class Animal {
   void speak() {
     print("Hewan bersuara...");
   }
 }
 
-class Dog extends Animal {
+base class Dog extends Animal {
   @override
   void speak() {
     print("Woof!");
   }
 }
 
-class Cat extends Animal {
-  @override
-  void speak() {
-    print("Meow!");
-  }
-}
-
 void main() {
   Animal animal = Dog();
   animal.speak(); // Woof!
-
-  Animal dog = Dog();
-  dog.speak(); // Woof!
-
-  Animal cat = Cat();
-  cat.speak(); // Meow!
 }</code></pre>
      <button class="btn-run" onclick="capture('n4.png')">Capture</button>
 </div>
@@ -803,7 +769,7 @@ void main() {
   </div>
 
   <div class="card">
-    <h2>Bonus Class Repository</h2>
+    <h2>Bonus base Class Repository</h2>
     <div class="desc"></div>
     <p>Repository menggunakan base class agar hanya bisa diwariskan dengan extends, bukan diimplementasikan sembarangan.</p>
 
@@ -820,67 +786,40 @@ void main() {
 
     <p>ntinya: base class dipakai untuk menjaga konsistensi CRUD dan memastikan hanya class turunan yang mengikuti aturan yang bisa digunakan.</p>
     <pre><code>//Nama: Ratu Klarisa Rahadianti
-// NIM: 251410010
-// Kelas: SI2A
+//Nim: 251410010
+//Kelas: SI2A
 
-// ================= Base Class Repository =================
-abstract class Repository<T> {
-  void create(T data);
-  List<T> read();
-  void update(int index, T data);
-  void delete(int index);
-}
-
-// ================= Implementasi Repository =================
-class DataRepository<T> extends Repository<T> {
-  final List<T> _data = [];
-
-  @override
-  void create(T data) {
-    _data.add(data);
-    print('Data ditambahkan: $data');
+base class Repository {
+  void create(String data) {
+    print("Create: $data");
   }
 
-  @override
-  List<T> read() {
-    return _data;
+  void read() {
+    print("Read data");
   }
 
-  @override
-  void update(int index, T data) {
-    if (index >= 0 && index < _data.length) {
-      _data[index] = data;
-      print('Data diupdate di index $index menjadi $data');
-    } else {
-      print('Index tidak valid');
-    }
+  void update(int id, String data) {
+    print("Update id=$id: $data");
   }
 
-  @override
-  void delete(int index) {
-    if (index >= 0 && index < _data.length) {
-      print('Data dihapus: ${_data[index]}');
-      _data.removeAt(index);
-    } else {
-      print('Index tidak valid');
-    }
+  void delete(int id) {
+    print("Delete id=$id");
   }
 }
 
-// ================= MAIN =================
+base class UserRepository extends Repository {
+  @override
+  void read() {
+    print("Menampilkan semua user");
+  }
+}
+
 void main() {
-  var repo = DataRepository<String>();
-
-  repo.create("Buku");
-  repo.create("Pensil");
-
-  print("Data sekarang: ${repo.read()}");
-
-  repo.update(1, "Pulpen");
-  print("Setelah update: ${repo.read()}");
-
-  repo.delete(0);
-  print("Setelah delete: ${repo.read()}");
+  var repo = UserRepository();
+  repo.create("User A");
+  repo.read();
+  repo.update(1, "User B");
+  repo.delete(2);
 }
 </code></pre>
      <button class="btn-run" onclick="capture('4.png')">Capture</button>
