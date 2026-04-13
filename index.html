@@ -140,7 +140,7 @@
       font-size: 0.85rem;
     }
 
-    /* ========== MODAL DIPERBAIKI AGAR GAMBAR TIDAK TERPOTONG ========== */
+    /* ========== MODAL DENGAN SCROLL, GAMBAR UKURAN ASLI TIDAK TERPOTONG ========== */
     .modal {
       display: none;
       position: fixed;
@@ -193,15 +193,15 @@
       color: white;
     }
 
-    /* modal-body: scroll jika gambar terlalu besar, tidak terpotong */
+    /* modal-body: scroll otomatis, gambar ukuran asli */
     .modal-body {
       flex: 1;
       padding: 0;
-      overflow: auto;   /* scroll jika perlu */
+      overflow: auto;
+      background: #0a0f1c;
       display: flex;
       justify-content: center;
-      align-items: flex-start; /* biar gambar dari atas */
-      background: #0a0f1c;
+      align-items: flex-start;
     }
 
     .modal-body iframe {
@@ -213,19 +213,19 @@
       background: #fefefe;
     }
 
-    /* gambar akan discroll jika lebih besar dari area modal, tidak dipotong */
+    /* gambar ukuran asli, tidak diskalakan (agar tidak terpotong) */
     .modal-body img {
+      display: block;
+      margin: 0 auto;
       max-width: none;
       max-height: none;
       width: auto;
       height: auto;
-      display: block;
-      margin: 0 auto;
     }
   </style>
 </head>
 <body>
-<!-- ========== SEMUA KONTEN CARD SAMA PERSIS SEPERTI ASLI ========== -->
+<!-- ========== SEMUA KONTEN CARD SAMA PERSIS SEPERTI ASLI (saya tidak ubah) ========== -->
 <header>
   <h1>🧩 Multiple Inheritance & Class Modifiers</h1>
   <p class="subhead">Dart OOP — Sesi 5 | Mixin · Sealed · Base · Final</p>
@@ -306,7 +306,7 @@ void main() {
 
   <!-- Studi Kasus Mixin dengan State -->
   <div class="card">
-    <h2>Slide 4 Studi Kasus ixin Mixin dengan State</h2>
+    <h2>Slide 4 Studi Kasus Mixin dengan State</h2>
     <div class="desc">Referensi parent bisa menampung objek child. Method yang dipanggil sesuai objek asli (runtime).</div>
     <pre><code>//Nama: Ratu Klarisa Rahadianti
 //Nim: 251410010
@@ -738,7 +738,7 @@ void main() {
   const modalTitle = document.getElementById('modalTitle');
   const modalBody = document.querySelector(".modal-body");
 
-  // ========== FUNGSI MEMBUAT GAMBAR DARI TEKS (FALLBACK) DENGAN UKURAN TERBATAS ==========
+  // ========== FUNGSI MEMBUAT GAMBAR DARI TEKS (FALLBACK) ==========
   function textToImage(outputText, title) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -761,7 +761,6 @@ void main() {
     let canvasWidth = Math.max(450, maxWidth + paddingX * 2);
     let canvasHeight = Math.max(200, (lines.length * fontSize * lineHeight) + paddingY * 2 + 30);
     
-    // Batasi ukuran maksimal agar tidak overflow (opsional)
     const maxCanvasWidth = 800;
     const maxCanvasHeight = 600;
     if (canvasWidth > maxCanvasWidth) {
@@ -826,15 +825,14 @@ void main() {
     return "// Tidak ada output simulasi.\n// Silakan jalankan kode di DartPad.";
   }
 
-  // ========== CAPTURE DENGAN FALLBACK (gambar tidak dipaksa kecil) ==========
+  // ========== CAPTURE DENGAN FALLBACK ==========
   function capture(imgFile, cardTitle, programName) {
     while (modalBody.firstChild) {
       modalBody.removeChild(modalBody.firstChild);
     }
     const img = document.createElement("img");
     img.src = imgFile;
-    // Hapus style inline agar mengikuti CSS (gambar ditampilkan full, scroll jika perlu)
-    img.style.cssText = "";
+    img.style.cssText = ""; // hapus inline style
     img.onerror = () => {
       if (modalBody.contains(img)) modalBody.removeChild(img);
       const output = getOutputForCard(cardTitle);
